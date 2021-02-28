@@ -1,260 +1,130 @@
 import "./phaser.js";
+var game = new Phaser.Game(800, 600, Phaser.AUTO, null, { preload: preload, create: create, update: update });
 
-var game = new Phaser.Game(
-    800, 600,                       // 800 x 600 rebackgroundolution.
-    Phaser.AUTO,                    // Allow Phaser to determine Canvas or WebGL
-    "barkanoid",                    // The HTML element ID we will connect Phaser to.
-    {                               // Functions (callbacks) for Phaser to call in
-        preload: phaserPreload,     // in different states of its execution
-        create: phaserCreate,
-        update: phaserUpdate
-    }
-);
-
-// Commonly it's not a good idea to pollute the JS global namespace but as it's
-// just an example we try keeping it as simple as possible and just introduce
-// the variables here
-
-// Few game related variables that we'll leave undefined
 var ball;
 var paddle;
-var tiles;
-var livesText;
-var introText;
-var background;
-
-var ballOnPaddle = true;
-var lives = 3;
+var bricks;
+var newBrick;
+var brickInfo;
+var scoreText;
 var score = 0;
+var lives = 3;
+var livesText;
+var lifeLostText;
+var playing = false;
+var startButton;
 
-var defaultTextOptions = {
-    font: "20px Arial",
-    align: "left",
-    fill: "#ffffff"
-};
-
-var boldTextOptions = {
-    font: "40px Arial",
-    fill: "#ffffff",
-    align: "center"
-};
-
-/**
- * Preload callback. Used to load all assets into Phaser.
- */
-function phaserPreload() {
-    // Loading the background abackground an image
-    game.load.image("background", "/assets/background.jpg");
-    // Loading the tiles
-    game.load.image("tile0", "/assets/tile0.png");
-    game.load.image("tile1", "/assets/tile1.png");
-    game.load.image("tile2", "/assets/tile2.png");
-    game.load.image("tile3", "/assets/tile3.png");
-    game.load.image("tile4", "/assets/tile4.png");
-    game.load.image("tile5", "/assets/tile5.png");
-    // Loading the paddle and the ball
-    game.load.image("paddle", "/assets/paddle.png");
-    game.load.image("ball", "/assets/ball.png");
+function preload() {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
+    game.stage.backgroundColor = '#eee';
+    game.load.image('paddle', 'img/paddle.png');
+    game.load.image('brick', 'img/brick.png');
+    game.load.spritesheet('ball', 'img/wobble.png', 20, 20);
+    game.load.spritesheet('button', 'img/button.png', 120, 40);
 }
-
-/**
- * Create callback. Used to create all game related objects, set states and other pre-game running
- * details.
- */
-function phaserCreate() {
+function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    // All walls collide except the bottom
     game.physics.arcade.checkCollision.down = false;
-    // Using the in-game name to fetch the loaded asset for the Background object
-    background = game.add.tileSprite(0, 0, 800, 600, "background");
-
-    // Creating a tile group
-    tiles = game.add.group();
-    tiles.enableBody = true;
-    tiles.physicsdBodyType = Phaser.Physics.ARCADE;
-    // Creating N tiles into the tile group
-    for (var y = 0; y < 4; y++) {
-        for (var x = 0; x < 15; x++) {
-            // Randomizing the tile sprite we load for the tile
-            var randomTileNumber = Math.floor(Math.random() * 6);
-            var tile = tiles.create(120 + (x * 36), 100 + (y * 52), "tile" + randomTileNumber);
-            tile.body.bounce.set(1);
-            tile.body.immovable = true;
-        }
-    }
-
-    // Setup the player -- paddle
-    paddle = game.add.sprite(game.world.centerX, 500, "paddle");
-    paddle.anchor.setTo(0.5, 0.5);
-    game.physics.enable(paddle, Phaser.Physics.ARCADE);
-    paddle.body.collideWorldBounds = true;
-    paddle.body.bounce.set(1);
-    paddle.body.immovable = true;
-
-    // phaserCreate the ball
-    ball = game.add.sprite(game.world.centerX, paddle.y - 16, "ball");
+    ball = game.add.sprite(game.world.width * 0.5, game.world.height - 25, 'ball');
+    ball.animations.add('wobble', [0, 1, 0, 2, 0, 1, 0, 2, 0], 24);
     ball.anchor.set(0.5);
-    ball.checkWorldBounds = true;
     game.physics.enable(ball, Phaser.Physics.ARCADE);
     ball.body.collideWorldBounds = true;
     ball.body.bounce.set(1);
-    // When it goes out of bounds we'll call the function 'death'
-    ball.events.onOutOfBounds.add(helpers.death, this);
+    ball.checkWorldBounds = true;
+    ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
-    // Setup score text
-    scoreText = game.add.text(32, 550, "score: 0", defaultTextOptions);
-    livesText = game.add.text(680, 550, "lives: 3", defaultTextOptions);
-    introText = game.add.text(game.world.centerX, 400, "- click to start -", boldTextOptions);
-    introText.anchor.setTo(0.5, 0.5);
-    game.input.onDown.add(helpers.release, this);
+    paddle = game.add.sprite(game.world.width * 0.5, game.world.height - 5, 'paddle');
+    paddle.anchor.set(0.5, 1);
+    game.physics.enable(paddle, Phaser.Physics.ARCADE);
+    paddle.body.immovable = true;
+
+    initBricks();
+
+    textStyle = { font: '18px Arial', fill: '#0095DD' };
+    scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
+    livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, textStyle);
+    livesText.anchor.set(1, 0);
+    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'Life lost, tap to continue', textStyle);
+    lifeLostText.anchor.set(0.5);
+    lifeLostText.visible = false;
+
+    startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
+    startButton.anchor.set(0.5);
 }
-
-/**
- * Phaser Engines update loop that gets called every phaserUpdate.
- */
-function phaserUpdate() {
-    paddle.x = game.input.x;
-
-    // Making sure the player does not move out of bounds
-    if (paddle.x < 24) {
-        paddle.x = 24;
-    } else if (paddle.x > game.width - 24) {
-        paddle.x = game.width - 24;
-    }
-
-    if (ballOnPaddle) {
-        // Setting the ball on the paddle when player has it
-        ball.body.x = paddle.x;
-    } else {
-        // Check collisions
-        game.physics.arcade.collide(ball, paddle, helpers.ballCollideWithPaddle, null, this);
-        game.physics.arcade.collide(ball, tiles, helpers.ballCollideWithTile, null, this);
-    }
-}
-
-/**
- * Set of helper functions.
- */
-var helpers = {
-    /**
-     * Releases ball from the paddle.
-     */
-    release: function () {
-        if (ballOnPaddle) {
-            ballOnPaddle = false;
-            ball.body.velocity.y = -300;
-            ball.body.velocity.x = -75;
-            introText.visible = false;
-        }
-    },
-
-    /**
-     * Ball went out of bounds.
-     */
-    death: function () {
-        lives--;
-        livesText.text = "lives: " + lives;
-
-        if (lives === 0) {
-            helpers.gameOver();
-        } else {
-            ballOnPaddle = true;
-            ball.reset(paddle.body.x + 16, paddle.y - 16);
-        }
-    },
-
-    /**
-     * Game over, all lives lost.
-     */
-    gameOver: function () {
-        ball.body.velocity.setTo(0, 0);
-        introText.text = "Game Over!";
-        introText.visible = true;
-    },
-
-    /**
-     * Callback for when ball collides with Tiles.
-     */
-    ballCollideWithTile: function (ball, tile) {
-        tile.kill();
-
-        score += 10;
-        scoreText.text = "score: " + score;
-
-        //  Are they any tiles left?
-        if (tiles.countLiving() <= 0) {
-            //  New level start
-            score += 1000;
-            scoreText.text = "score: " + score;
-            introText.text = "- Next Level -";
-
-            //  Attach ball to the players paddle
-            ballOnPaddle = true;
-            ball.body.velocity.set(0);
-            ball.x = paddle.x + 16;
-            ball.y = paddle.y - 16;
-
-            // Tell tiles to revive
-            tiles.callAll("revive");
-        }
-
-    },
-
-    /**
-     * Callback for when ball collides with the players paddle.
-     */
-    ballCollideWithPaddle: function (ball, paddle) {
-        var diff = 0;
-
-        // Super simplistic bounce physics for the ball movement
-        if (ball.x < paddle.x) {
-            //  Ball is on the left-hand side
-            diff = paddle.x - ball.x;
-            ball.body.velocity.x = (-10 * diff);
-        } else if (ball.x > paddle.x) {
-            //  Ball is on the right-hand side
-            diff = ball.x - paddle.x;
-            ball.body.velocity.x = (10 * diff);
-        } else {
-            //  Ball is perfectly in the middle
-            //  Add a little random X to stop it bouncing straight up!
-            ball.body.velocity.x = 2 + Math.random() * 8;
-        }
-    }
-};
-        var diff = 0;
-
-        if (ball.x < paddle.x) {
-            //  Ball is on the left-hand side of the paddle
-            diff = paddle.x - ball.x;
-            ball.setVelocityX(-10 * diff);
-        }
-        else if (ball.x > paddle.x) {
-            //  Ball is on the right-hand side of the paddle
-            diff = ball.x - paddle.x;
-            ball.setVelocityX(10 * diff);
-        }
-        else {
-            //  Ball is perfectly in the middle
-            //  Add a little random X to stop it bouncing straight up!
-            ball.setVelocityX(2 + Math.random() * 8);
-        }
-
 function update() {
-        if (this.ball.y > 600) {
-            this.resetBall();
-        }
-    };
-
-var config = {
-    type: Phaser.WEBGL,
-    width: 800,
-    height: 600,
-    parent: 'phaser-example',
-    scene: [Breakout],
-    physics: {
-        default: 'arcade'
+    game.physics.arcade.collide(ball, paddle, ballHitPaddle);
+    game.physics.arcade.collide(ball, bricks, ballHitBrick);
+    if (playing) {
+        paddle.x = game.input.x || game.world.width * 0.5;
     }
-};
-
-var game = new Phaser.Game(config);
+}
+function initBricks() {
+    brickInfo = {
+        width: 50,
+        height: 20,
+        count: {
+            row: 7,
+            col: 3
+        },
+        offset: {
+            top: 50,
+            left: 60
+        },
+        padding: 10
+    }
+    bricks = game.add.group();
+    for (c = 0; c < brickInfo.count.col; c++) {
+        for (r = 0; r < brickInfo.count.row; r++) {
+            var brickX = (r * (brickInfo.width + brickInfo.padding)) + brickInfo.offset.left;
+            var brickY = (c * (brickInfo.height + brickInfo.padding)) + brickInfo.offset.top;
+            newBrick = game.add.sprite(brickX, brickY, 'brick');
+            game.physics.enable(newBrick, Phaser.Physics.ARCADE);
+            newBrick.body.immovable = true;
+            newBrick.anchor.set(0.5);
+            bricks.add(newBrick);
+        }
+    }
+}
+function ballHitBrick(ball, brick) {
+    var killTween = game.add.tween(brick.scale);
+    killTween.to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None);
+    killTween.onComplete.addOnce(function () {
+        brick.kill();
+    }, this);
+    killTween.start();
+    score += 10;
+    scoreText.setText('Points: ' + score);
+    if (score === brickInfo.count.row * brickInfo.count.col * 10) {
+        alert('You won the game, congratulations!');
+        location.reload();
+    }
+}
+function ballLeaveScreen() {
+    lives--;
+    if (lives) {
+        livesText.setText('Lives: ' + lives);
+        lifeLostText.visible = true;
+        ball.reset(game.world.width * 0.5, game.world.height - 25);
+        paddle.reset(game.world.width * 0.5, game.world.height - 5);
+        game.input.onDown.addOnce(function () {
+            lifeLostText.visible = false;
+            ball.body.velocity.set(150, -150);
+        }, this);
+    }
+    else {
+        alert('You lost, game over!');
+        location.reload();
+    }
+}
+function ballHitPaddle(ball, paddle) {
+    ball.animations.play('wobble');
+    ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
+}
+function startGame() {
+    startButton.destroy();
+    ball.body.velocity.set(150, -150);
+    playing = true;
+}
