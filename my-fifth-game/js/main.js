@@ -239,15 +239,12 @@ var helpers = {
             //  Add a little random X to stop it bouncing straight up!
             ball.setVelocityX(2 + Math.random() * 8);
         }
-    },
 
-    update: function () {
+update: function() {
         if (this.ball.y > 600) {
             this.resetBall();
         }
-    }
-
-});
+    };
 
 var config = {
     type: Phaser.WEBGL,
