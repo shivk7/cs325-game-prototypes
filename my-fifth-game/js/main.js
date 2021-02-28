@@ -1,138 +1,126 @@
 import "./phaser.js";
 
-var game = new Phaser.Game(480, 320, Phaser.AUTO, null, { preload: preload, create: create, update: update });
+var Breakout = new Phaser.Class({
 
-var ball;
-var paddle;
-var bricks;
-var newBrick;
-var brickInfo;
-var scoreText;
-var score = 0;
-var lives = 3;
-var livesText;
-var lifeLostText;
-var playing = false;
-var startButton;
+    Extends: Phaser.Scene,
 
-function preload() {
-    handleRemoteImagesOnJSFiddle();
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    game.scale.pageAlignHorizontally = true;
-    game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = '#eee';
-    game.load.image('paddle', 'img/paddle.png');
-    game.load.image('brick', 'img/brick.png');
-    game.load.spritesheet('ball', 'img/wobble.png', 20, 20);
-    game.load.spritesheet('button', 'img/button.png', 120, 40);
-}
-function create() {
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.checkCollision.down = false;
-    ball = game.add.sprite(game.world.width * 0.5, game.world.height - 25, 'ball');
-    ball.animations.add('wobble', [0, 1, 0, 2, 0, 1, 0, 2, 0], 24);
-    ball.anchor.set(0.5);
-    game.physics.enable(ball, Phaser.Physics.ARCADE);
-    ball.body.collideWorldBounds = true;
-    ball.body.bounce.set(1);
-    ball.checkWorldBounds = true;
-    ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+    initialize:
 
-    paddle = game.add.sprite(game.world.width * 0.5, game.world.height - 5, 'paddle');
-    paddle.anchor.set(0.5, 1);
-    game.physics.enable(paddle, Phaser.Physics.ARCADE);
-    paddle.body.immovable = true;
+        function Breakout() {
+            Phaser.Scene.call(this, { key: 'breakout' });
 
-    initBricks();
-
-    textStyle = { font: '18px Arial', fill: '#0095DD' };
-    scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
-    livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, textStyle);
-    livesText.anchor.set(1, 0);
-    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'Life lost, tap to continue', textStyle);
-    lifeLostText.anchor.set(0.5);
-    lifeLostText.visible = false;
-
-    startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
-    startButton.anchor.set(0.5);
-}
-function update() {
-    game.physics.arcade.collide(ball, paddle, ballHitPaddle);
-    game.physics.arcade.collide(ball, bricks, ballHitBrick);
-    if (playing) {
-        paddle.x = game.input.x || game.world.width * 0.5;
-    }
-}
-function initBricks() {
-    brickInfo = {
-        width: 50,
-        height: 20,
-        count: {
-            row: 7,
-            col: 3
+            this.bricks;
+            this.paddle;
+            this.ball;
         },
-        offset: {
-            top: 50,
-            left: 60
-        },
-        padding: 10
-    }
-    bricks = game.add.group();
-    for (c = 0; c < brickInfo.count.col; c++) {
-        for (r = 0; r < brickInfo.count.row; r++) {
-            var brickX = (r * (brickInfo.width + brickInfo.padding)) + brickInfo.offset.left;
-            var brickY = (c * (brickInfo.height + brickInfo.padding)) + brickInfo.offset.top;
-            newBrick = game.add.sprite(brickX, brickY, 'brick');
-            game.physics.enable(newBrick, Phaser.Physics.ARCADE);
-            newBrick.body.immovable = true;
-            newBrick.anchor.set(0.5);
-            bricks.add(newBrick);
+
+    preload: function () {
+        this.load.atlas('assets', 'assets/games/breakout/breakout.png', 'assets/games/breakout/breakout.json');
+    },
+
+    create: function () {
+        //  Enable world bounds, but disable the floor
+        this.physics.world.setBoundsCollision(true, true, true, false);
+
+        //  Create the bricks in a 10x6 grid
+        this.bricks = this.physics.add.staticGroup({
+            key: 'assets', frame: ['blue1', 'red1', 'green1', 'yellow1', 'silver1', 'purple1'],
+            frameQuantity: 10,
+            gridAlign: { width: 10, height: 6, cellWidth: 64, cellHeight: 32, x: 112, y: 100 }
+        });
+
+        this.ball = this.physics.add.image(400, 500, 'assets', 'ball1').setCollideWorldBounds(true).setBounce(1);
+        this.ball.setData('onPaddle', true);
+
+        this.paddle = this.physics.add.image(400, 550, 'assets', 'paddle1').setImmovable();
+
+        //  Our colliders
+        this.physics.add.collider(this.ball, this.bricks, this.hitBrick, null, this);
+        this.physics.add.collider(this.ball, this.paddle, this.hitPaddle, null, this);
+
+        //  Input events
+        this.input.on('pointermove', function (pointer) {
+
+            //  Keep the paddle within the game
+            this.paddle.x = Phaser.Math.Clamp(pointer.x, 52, 748);
+
+            if (this.ball.getData('onPaddle')) {
+                this.ball.x = this.paddle.x;
+            }
+
+        }, this);
+
+        this.input.on('pointerup', function (pointer) {
+
+            if (this.ball.getData('onPaddle')) {
+                this.ball.setVelocity(-75, -300);
+                this.ball.setData('onPaddle', false);
+            }
+
+        }, this);
+    },
+
+    hitBrick: function (ball, brick) {
+        brick.disableBody(true, true);
+
+        if (this.bricks.countActive() === 0) {
+            this.resetLevel();
+        }
+    },
+
+    resetBall: function () {
+        this.ball.setVelocity(0);
+        this.ball.setPosition(this.paddle.x, 500);
+        this.ball.setData('onPaddle', true);
+    },
+
+    resetLevel: function () {
+        this.resetBall();
+
+        this.bricks.children.each(function (brick) {
+
+            brick.enableBody(false, 0, 0, true, true);
+
+        });
+    },
+
+    hitPaddle: function (ball, paddle) {
+        var diff = 0;
+
+        if (ball.x < paddle.x) {
+            //  Ball is on the left-hand side of the paddle
+            diff = paddle.x - ball.x;
+            ball.setVelocityX(-10 * diff);
+        }
+        else if (ball.x > paddle.x) {
+            //  Ball is on the right-hand side of the paddle
+            diff = ball.x - paddle.x;
+            ball.setVelocityX(10 * diff);
+        }
+        else {
+            //  Ball is perfectly in the middle
+            //  Add a little random X to stop it bouncing straight up!
+            ball.setVelocityX(2 + Math.random() * 8);
+        }
+    },
+
+    update: function () {
+        if (this.ball.y > 600) {
+            this.resetBall();
         }
     }
-}
-function ballHitBrick(ball, brick) {
-    var killTween = game.add.tween(brick.scale);
-    killTween.to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None);
-    killTween.onComplete.addOnce(function () {
-        brick.kill();
-    }, this);
-    killTween.start();
-    score += 10;
-    scoreText.setText('Points: ' + score);
-    if (score === brickInfo.count.row * brickInfo.count.col * 10) {
-        alert('You won the game, congratulations!');
-        location.reload();
-    }
-}
-function ballLeaveScreen() {
-    lives--;
-    if (lives) {
-        livesText.setText('Lives: ' + lives);
-        lifeLostText.visible = true;
-        ball.reset(game.world.width * 0.5, game.world.height - 25);
-        paddle.reset(game.world.width * 0.5, game.world.height - 5);
-        game.input.onDown.addOnce(function () {
-            lifeLostText.visible = false;
-            ball.body.velocity.set(150, -150);
-        }, this);
-    }
-    else {
-        alert('You lost, game over!');
-        location.reload();
-    }
-}
-function ballHitPaddle(ball, paddle) {
-    ball.animations.play('wobble');
-    ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
-}
-function startGame() {
-    startButton.destroy();
-    ball.body.velocity.set(150, -150);
-    playing = true;
-}
 
-// this function (needed only on JSFiddle) take care of loading the images from the remote server
-function handleRemoteImagesOnJSFiddle() {
-    game.load.baseURL = 'https://end3r.github.io/Gamedev-Phaser-Content-Kit/demos/';
-    game.load.crossOrigin = 'anonymous';
-}
+});
+
+var config = {
+    type: Phaser.WEBGL,
+    width: 800,
+    height: 600,
+    parent: 'phaser-example',
+    scene: [Breakout],
+    physics: {
+        default: 'arcade'
+    }
+};
+
+var game = new Phaser.Game(config);
