@@ -92,22 +92,14 @@ function create() {
         }
     });
 
-    // Manage key presses
     cursors = this.input.keyboard.createCursorKeys();
 
-    // Ensure that the player and ball can't leave the screen
     player.setCollideWorldBounds(true);
     ball.setCollideWorldBounds(true);
-    /**
-     * The bounce ensures that the ball retains its velocity after colliding with
-     * an object.
-     */
+    
     ball.setBounce(1, 1);
 
-    /**
-     * Disable collision with the bottom of the game world. This needs to be added
-     * so the ball falls to the bottom, which means that the game is over
-     */
+    
     this.physics.world.checkCollision.down = false;
 
     // Add collision for the bricks
