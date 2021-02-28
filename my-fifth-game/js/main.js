@@ -4,42 +4,27 @@ import "./phaser.js";
 let player, ball, violetBricks, yellowBricks, redBricks, cursors;
 // Variable to determine if we started playing
 let gameStarted = false;
-// Add global text objects
+
 let openingText, gameOverText, playerWonText;
 
-// This object contains all the Phaser configurations to load our game
+
 const config = {
-    /**
-     * The type can be Phaser.CANVAS, Phaser.WEBGL or Phaser.AUTO. AUTO means that
-     * Phaser will try to render with WebGL, and fall back to Canvas if it fails
-     */
+    
     type: Phaser.AUTO,
-    // Parent element to inject the Canvas/WebGL element with the game
     parent: 'game',
     width: 800,
-    heigth: 640,
+    heigth: 600,
     scale: {
-        // Ensure the canvas is resized to fit the parent div's dimensions
         mode: Phaser.Scale.RESIZE,
-        // Center the game canvas both horizontally and vertically within the parent
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    /**
-     * A scene is "self-contained" game world - all the logic and state of a game
-     * component. For e.g. it's common to a game menu to be one scene, whereas the
-     * first level is another scene. Phaser has a Scene object, but we can provide
-     * a regular JS object with these function names:
-     */
+    
     scene: {
         preload,
         create,
         update,
     },
-    /**
-     * The physics engine determines how objects interact with the world. Phaser
-     * supports three physics engines out of the box: arcade, impact and matter.
-     * Arcade is understood to be the simplest one to implement
-     */
+    
     physics: {
         default: 'arcade',
         arcade: {
@@ -48,13 +33,9 @@ const config = {
     }
 };
 
-// Create the game instance
 const game = new Phaser.Game(config);
 
-/**
- * The function loads assets as Phaser begins to run the scene. The images are
- * loaded as key value pairs, we reference the assets by their keys of course
- */
+
 function preload() {
     this.load.image('ball', '.assets/ball_32_32.png');
     this.load.image('paddle', '.assets/paddle_128_32.png');
@@ -63,30 +44,21 @@ function preload() {
     this.load.image('brick3', '.assets/brick3_64_32.png');
 }
 
-/**
- * We create our game world in this function. The initial state of our game is
- * defined here. We also set up our physics rules here
- */
+
 function create() {
-    /**
-     * Coordinates start at 0,0 from the top left
-     * As we move rightward, the x value increases
-     * As we move downward, the y value increases.
-     */
+    
     player = this.physics.add.sprite(
-        400, // x position
-        600, // y position
-        'paddle', // key of image for the sprite
+        400, 
+        600, 
+        'paddle', 
     );
 
-    // Let's add the ball
     ball = this.physics.add.sprite(
-        400, // x position
-        565, // y position
-        'ball' // key of image for the sprite
+        400, 
+        565, 
+        'ball' 
     );
 
-    // Add violet bricks
     violetBricks = this.physics.add.group({
         key: 'brick1',
         repeat: 9,
@@ -98,7 +70,6 @@ function create() {
         }
     });
 
-    // Add yellow bricks
     yellowBricks = this.physics.add.group({
         key: 'brick2',
         repeat: 9,
@@ -110,7 +81,6 @@ function create() {
         }
     });
 
-    // Add red bricks
     redBricks = this.physics.add.group({
         key: 'brick3',
         repeat: 9,
