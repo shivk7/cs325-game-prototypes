@@ -1,4 +1,4 @@
-﻿mport "./phaser.js";
+import "./phaser.js";
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -236,8 +236,8 @@ function create() {
         score += 110;
         scoreText.setText('Score: ' + score);
     }
-   
-    }
+
+}
 
 
 function update() {
