@@ -1,130 +1,208 @@
 import "./phaser.js";
-var game = new Phaser.Game(800, 600, Phaser.AUTO, null, { preload: preload, create: create, update: update });
 
-var ball;
-var paddle;
-var bricks;
-var newBrick;
-var brickInfo;
-var scoreText;
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 640,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: false,
+            //debug: true
+        },
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var game = new Phaser.Game(config);
+var gameStarted = false;
 var score = 0;
-var lives = 3;
-var livesText;
-var lifeLostText;
-var playing = false;
-var startButton;
+var scoreText;
+var gameWon = false;
 
 function preload() {
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    game.scale.pageAlignHorizontally = true;
-    game.scale.pageAlignVertically = true;
-    game.stage.backgroundColor = '#eee';
-    game.load.image('paddle', 'img/paddle.png');
-    game.load.image('brick', 'img/brick.png');
-    game.load.spritesheet('ball', 'img/wobble.png', 20, 20);
-    game.load.spritesheet('button', 'img/button.png', 120, 40);
+    this.load.image('ball', './assets/ball.png');
+    this.load.image('paddle', './assets/paddle.png');
+    this.load.image('brick1', './assets/brick1.png');
+    this.load.image('brick2', './assets/brick2.png');
+    this.load.image('brick3', './assets/brick3.png');
+    this.load.image('brick4', './assets/brick4.png');
+    this.load.image('brick5', './assets/brick5.png');
 }
+
 function create() {
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.checkCollision.down = false;
-    ball = game.add.sprite(game.world.width * 0.5, game.world.height - 25, 'ball');
-    ball.animations.add('wobble', [0, 1, 0, 2, 0, 1, 0, 2, 0], 24);
-    ball.anchor.set(0.5);
-    game.physics.enable(ball, Phaser.Physics.ARCADE);
-    ball.body.collideWorldBounds = true;
-    ball.body.bounce.set(1);
-    ball.checkWorldBounds = true;
-    ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+    this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
+    this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
 
-    paddle = game.add.sprite(game.world.width * 0.5, game.world.height - 5, 'paddle');
-    paddle.anchor.set(0.5, 1);
-    game.physics.enable(paddle, Phaser.Physics.ARCADE);
-    paddle.body.immovable = true;
+    this.blueBricks = createBricksGroup('brick1', 170, this);
+    this.greenBricks = createBricksGroup('brick2', 140, this);
+    this.purpleBricks = createBricksGroup('brick3', 110, this);
+    this.yellowBricks = createBricksGroup('brick4', 80, this);
+    this.redBricks = createBricksGroup('brick5', 50, this);
 
-    initBricks();
+    this.ball.setCollideWorldBounds(true);
+    this.ball.setBounce(1, 1);
+    this.physics.world.checkCollision.down = false;
 
-    textStyle = { font: '18px Arial', fill: '#0095DD' };
-    scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
-    livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, textStyle);
-    livesText.anchor.set(1, 0);
-    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'Life lost, tap to continue', textStyle);
-    lifeLostText.anchor.set(0.5);
-    lifeLostText.visible = false;
+    this.physics.add.collider(this.ball, this.blueBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.greenBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.purpleBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.yellowBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.redBricks, brickCollision, null, this);
 
-    startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
-    startButton.anchor.set(0.5);
+    this.player.setImmovable(true);
+    this.physics.add.collider(this.ball, this.player, playerCollision, null, this);
+
+    this.startText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'Click to Play',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#fff'
+        }
+    );
+    this.startText.setOrigin(0.5);
+
+    this.gameOverText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'Game Over!',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#fff'
+        }
+    );
+    this.gameOverText.setOrigin(0.5);
+    this.gameOverText.setVisible(false);
+
+    this.winText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'You Win!',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#fff'
+        }
+    );
+    this.winText.setOrigin(0.5);
+    this.winText.setVisible(false);
+
+    scoreText = this.add.text(
+        10,
+        10,
+        'Score: 0',
+        {
+            fontFamily: 'Arial',
+            fontSize: '18px',
+            fill: '#fff'
+        }
+    );
 }
+
+function createBricksGroup(name, y, scene) {
+    return scene.physics.add.group({
+        key: name,
+        repeat: 8,
+        immovable: true,
+        setXY: {
+            x: 80,
+            y: y,
+            stepX: 80
+        },
+        setScale: { x: 0.2, y: 0.2 }
+    });
+}
+
 function update() {
-    game.physics.arcade.collide(ball, paddle, ballHitPaddle);
-    game.physics.arcade.collide(ball, bricks, ballHitBrick);
-    if (playing) {
-        paddle.x = game.input.x || game.world.width * 0.5;
-    }
-}
-function initBricks() {
-    brickInfo = {
-        width: 50,
-        height: 20,
-        count: {
-            row: 7,
-            col: 3
-        },
-        offset: {
-            top: 50,
-            left: 60
-        },
-        padding: 10
-    }
-    bricks = game.add.group();
-    for (c = 0; c < brickInfo.count.col; c++) {
-        for (r = 0; r < brickInfo.count.row; r++) {
-            var brickX = (r * (brickInfo.width + brickInfo.padding)) + brickInfo.offset.left;
-            var brickY = (c * (brickInfo.height + brickInfo.padding)) + brickInfo.offset.top;
-            newBrick = game.add.sprite(brickX, brickY, 'brick');
-            game.physics.enable(newBrick, Phaser.Physics.ARCADE);
-            newBrick.body.immovable = true;
-            newBrick.anchor.set(0.5);
-            bricks.add(newBrick);
+    if (!gameWon) {
+        if (isGameOver(this.physics.world, this.ball)) {
+            this.gameOverText.setVisible(true);
+            this.ball.destroy()
+            this.player.destroy();
+        } else {
+            this.player.setX(this.input.x);
+            if (!gameStarted) {
+                this.ball.setX(this.player.x);
+
+                if (this.input.activePointer.isDown) {
+                    gameStarted = true;
+                    this.ball.setVelocityY(-300);
+                    this.startText.setVisible(false);
+                }
+            }
         }
     }
 }
-function ballHitBrick(ball, brick) {
-    var killTween = game.add.tween(brick.scale);
-    killTween.to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None);
-    killTween.onComplete.addOnce(function () {
-        brick.kill();
-    }, this);
-    killTween.start();
-    score += 10;
-    scoreText.setText('Points: ' + score);
-    if (score === brickInfo.count.row * brickInfo.count.col * 10) {
-        alert('You won the game, congratulations!');
-        location.reload();
+
+function isGameOver(world, ball) {
+    return ball.body ? ball.body.y > world.bounds.height : true;
+}
+
+function isWon(blueBricks, greenBricks, purpleBricks, yellowBricks, redBricks) {
+    return (
+        blueBricks.countActive() === 0 &&
+        greenBricks.countActive() === 0 &&
+        purpleBricks.countActive() === 0 &&
+        yellowBricks.countActive() === 0 &&
+        redBricks.countActive() === 0
+    );
+}
+
+function brickCollision(ball, brick) {
+    brick.destroy();
+    addScore(brick);
+
+    if (ball.body.velocity.x === 0) {
+        if (ball.x < brick.x) {
+            ball.body.setVelocityX(-130);
+        } else {
+            ball.body.setVelocityX(130);
+        }
+    }
+
+    if (isWon(this.blueBricks, this.greenBricks, this.purpleBricks, this.yellowBricks, this.redBricks)) {
+        this.winText.setVisible(true);
+        this.ball.destroy();
+        this.player.destroy();
+        gameWon = true;
     }
 }
-function ballLeaveScreen() {
-    lives--;
-    if (lives) {
-        livesText.setText('Lives: ' + lives);
-        lifeLostText.visible = true;
-        ball.reset(game.world.width * 0.5, game.world.height - 25);
-        paddle.reset(game.world.width * 0.5, game.world.height - 5);
-        game.input.onDown.addOnce(function () {
-            lifeLostText.visible = false;
-            ball.body.velocity.set(150, -150);
-        }, this);
-    }
-    else {
-        alert('You lost, game over!');
-        location.reload();
+
+function playerCollision(ball, player) {
+    var velX = Math.abs(ball.body.velocity.x);
+
+    if (ball.x < player.x) {
+        ball.setVelocityX(-velX);
+    } else {
+        ball.setVelocityX(velX);
     }
 }
-function ballHitPaddle(ball, paddle) {
-    ball.animations.play('wobble');
-    ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
-}
-function startGame() {
-    startButton.destroy();
-    ball.body.velocity.set(150, -150);
-    playing = true;
+
+function addScore(brick) {
+    switch (brick.texture.key) {
+        case "brick1":
+            score += 10;
+            break;
+        case "brick2":
+            score += 20;
+            break;
+        case "brick3":
+            score += 30;
+            break;
+        case "brick4":
+            score += 40;
+            break;
+        case "brick5":
+            score += 50;
+            break;
+    }
+    scoreText.setText('Score: ' + score);
 }
