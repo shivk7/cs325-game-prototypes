@@ -37,11 +37,11 @@ const game = new Phaser.Game(config);
 
 
 function preload() {
-    this.load.image('ball', '.assets/ball_32_32.png');
-    this.load.image('paddle', '.assets/paddle_128_32.png');
-    this.load.image('brick1', '.assets/brick1_64_32.png');
-    this.load.image('brick2', '.assets/brick2_64_32.png');
-    this.load.image('brick3', '.assets/brick3_64_32.png');
+    this.load.image('ball', 'assets/ball_32_32.png');
+    this.load.image('paddle', 'assets/paddle_128_32.png');
+    this.load.image('brick1', 'assets/brick1_64_32.png');
+    this.load.image('brick2', 'assets/brick2_64_32.png');
+    this.load.image('brick3', 'assets/brick3_64_32.png');
 }
 
 
