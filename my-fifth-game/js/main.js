@@ -1,28 +1,28 @@
 import "./phaser.js";
 
-const config = {
+var config = {
     type: Phaser.AUTO,
-    parent: 'game',
     width: 800,
-    heigth: 600,
-    scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    },
-    scene: {
-        preload,
-        create,
-        update,
-    },
+    height: 600,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: false
-        },
-    }
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    },
+    input: {
+        gamepad: true
+    },
 };
+//variables
 
-const game = new Phaser.Game(config);
+var game = new Phaser.Game(config);
 
 function preload() { }
 
