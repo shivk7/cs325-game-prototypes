@@ -1,265 +1,264 @@
 import "./phaser.js";
 
-// Game objects are global variables so that many functions can access them
-let player, ball, violetBricks, yellowBricks, redBricks, cursors;
-// Variable to determine if we started playing
-let gameStarted = false;
+phaserCreate the game object itself
+var game = new Phaser.Game(
+    800, 600,                       // 800 x 600 rebackgroundolution.
+    Phaser.AUTO,                    // Allow Phaser to determine Canvas or WebGL
+    "barkanoid",                    // The HTML element ID we will connect Phaser to.
+    {                               // Functions (callbacks) for Phaser to call in
+        preload: phaserPreload,     // in different states of its execution
+        create: phaserCreate,
+        update: phaserUpdate
+    }
+);
 
-let openingText, gameOverText, playerWonText;
+// Commonly it's not a good idea to pollute the JS global namespace but as it's
+// just an example we try keeping it as simple as possible and just introduce
+// the variables here
 
+// Few game related variables that we'll leave undefined
+var ball;
+var paddle;
+var tiles;
+var livesText;
+var introText;
+var background;
 
-const config = {
-    
-    type: Phaser.AUTO,
-    parent: 'game',
+var ballOnPaddle = true;
+var lives = 3;
+var score = 0;
+
+var defaultTextOptions = {
+    font: "20px Arial",
+    align: "left",
+    fill: "#ffffff"
+};
+
+var boldTextOptions = {
+    font: "40px Arial",
+    fill: "#ffffff",
+    align: "center"
+};
+
+/**
+ * Preload callback. Used to load all assets into Phaser.
+ */
+function phaserPreload() {
+    // Loading the background abackground an image
+    game.load.image("background", "/assets/background.jpg");
+    // Loading the tiles
+    game.load.image("tile0", "/assets/tile0.png");
+    game.load.image("tile1", "/assets/tile1.png");
+    game.load.image("tile2", "/assets/tile2.png");
+    game.load.image("tile3", "/assets/tile3.png");
+    game.load.image("tile4", "/assets/tile4.png");
+    game.load.image("tile5", "/assets/tile5.png");
+    // Loading the paddle and the ball
+    game.load.image("paddle", "/assets/paddle.png");
+    game.load.image("ball", "/assets/ball.png");
+}
+
+/**
+ * Create callback. Used to create all game related objects, set states and other pre-game running
+ * details.
+ */
+function phaserCreate() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    // All walls collide except the bottom
+    game.physics.arcade.checkCollision.down = false;
+    // Using the in-game name to fetch the loaded asset for the Background object
+    background = game.add.tileSprite(0, 0, 800, 600, "background");
+
+    // Creating a tile group
+    tiles = game.add.group();
+    tiles.enableBody = true;
+    tiles.physicsdBodyType = Phaser.Physics.ARCADE;
+    // Creating N tiles into the tile group
+    for (var y = 0; y < 4; y++) {
+        for (var x = 0; x < 15; x++) {
+            // Randomizing the tile sprite we load for the tile
+            var randomTileNumber = Math.floor(Math.random() * 6);
+            var tile = tiles.create(120 + (x * 36), 100 + (y * 52), "tile" + randomTileNumber);
+            tile.body.bounce.set(1);
+            tile.body.immovable = true;
+        }
+    }
+
+    // Setup the player -- paddle
+    paddle = game.add.sprite(game.world.centerX, 500, "paddle");
+    paddle.anchor.setTo(0.5, 0.5);
+    game.physics.enable(paddle, Phaser.Physics.ARCADE);
+    paddle.body.collideWorldBounds = true;
+    paddle.body.bounce.set(1);
+    paddle.body.immovable = true;
+
+    // phaserCreate the ball
+    ball = game.add.sprite(game.world.centerX, paddle.y - 16, "ball");
+    ball.anchor.set(0.5);
+    ball.checkWorldBounds = true;
+    game.physics.enable(ball, Phaser.Physics.ARCADE);
+    ball.body.collideWorldBounds = true;
+    ball.body.bounce.set(1);
+    // When it goes out of bounds we'll call the function 'death'
+    ball.events.onOutOfBounds.add(helpers.death, this);
+
+    // Setup score text
+    scoreText = game.add.text(32, 550, "score: 0", defaultTextOptions);
+    livesText = game.add.text(680, 550, "lives: 3", defaultTextOptions);
+    introText = game.add.text(game.world.centerX, 400, "- click to start -", boldTextOptions);
+    introText.anchor.setTo(0.5, 0.5);
+    game.input.onDown.add(helpers.release, this);
+}
+
+/**
+ * Phaser Engines update loop that gets called every phaserUpdate.
+ */
+function phaserUpdate() {
+    paddle.x = game.input.x;
+
+    // Making sure the player does not move out of bounds
+    if (paddle.x < 24) {
+        paddle.x = 24;
+    } else if (paddle.x > game.width - 24) {
+        paddle.x = game.width - 24;
+    }
+
+    if (ballOnPaddle) {
+        // Setting the ball on the paddle when player has it
+        ball.body.x = paddle.x;
+    } else {
+        // Check collisions
+        game.physics.arcade.collide(ball, paddle, helpers.ballCollideWithPaddle, null, this);
+        game.physics.arcade.collide(ball, tiles, helpers.ballCollideWithTile, null, this);
+    }
+}
+
+/**
+ * Set of helper functions.
+ */
+var helpers = {
+    /**
+     * Releases ball from the paddle.
+     */
+    release: function () {
+        if (ballOnPaddle) {
+            ballOnPaddle = false;
+            ball.body.velocity.y = -300;
+            ball.body.velocity.x = -75;
+            introText.visible = false;
+        }
+    },
+
+    /**
+     * Ball went out of bounds.
+     */
+    death: function () {
+        lives--;
+        livesText.text = "lives: " + lives;
+
+        if (lives === 0) {
+            helpers.gameOver();
+        } else {
+            ballOnPaddle = true;
+            ball.reset(paddle.body.x + 16, paddle.y - 16);
+        }
+    },
+
+    /**
+     * Game over, all lives lost.
+     */
+    gameOver: function () {
+        ball.body.velocity.setTo(0, 0);
+        introText.text = "Game Over!";
+        introText.visible = true;
+    },
+
+    /**
+     * Callback for when ball collides with Tiles.
+     */
+    ballCollideWithTile: function (ball, tile) {
+        tile.kill();
+
+        score += 10;
+        scoreText.text = "score: " + score;
+
+        //  Are they any tiles left?
+        if (tiles.countLiving() <= 0) {
+            //  New level start
+            score += 1000;
+            scoreText.text = "score: " + score;
+            introText.text = "- Next Level -";
+
+            //  Attach ball to the players paddle
+            ballOnPaddle = true;
+            ball.body.velocity.set(0);
+            ball.x = paddle.x + 16;
+            ball.y = paddle.y - 16;
+
+            // Tell tiles to revive
+            tiles.callAll("revive");
+        }
+
+    },
+
+    /**
+     * Callback for when ball collides with the players paddle.
+     */
+    ballCollideWithPaddle: function (ball, paddle) {
+        var diff = 0;
+
+        // Super simplistic bounce physics for the ball movement
+        if (ball.x < paddle.x) {
+            //  Ball is on the left-hand side
+            diff = paddle.x - ball.x;
+            ball.body.velocity.x = (-10 * diff);
+        } else if (ball.x > paddle.x) {
+            //  Ball is on the right-hand side
+            diff = ball.x - paddle.x;
+            ball.body.velocity.x = (10 * diff);
+        } else {
+            //  Ball is perfectly in the middle
+            //  Add a little random X to stop it bouncing straight up!
+            ball.body.velocity.x = 2 + Math.random() * 8;
+        }
+    }
+};
+        var diff = 0;
+
+        if (ball.x < paddle.x) {
+            //  Ball is on the left-hand side of the paddle
+            diff = paddle.x - ball.x;
+            ball.setVelocityX(-10 * diff);
+        }
+        else if (ball.x > paddle.x) {
+            //  Ball is on the right-hand side of the paddle
+            diff = ball.x - paddle.x;
+            ball.setVelocityX(10 * diff);
+        }
+        else {
+            //  Ball is perfectly in the middle
+            //  Add a little random X to stop it bouncing straight up!
+            ball.setVelocityX(2 + Math.random() * 8);
+        }
+    },
+
+    update: function () {
+        if (this.ball.y > 600) {
+            this.resetBall();
+        }
+    }
+
+});
+
+var config = {
+    type: Phaser.WEBGL,
     width: 800,
-    heigth: 600,
-    scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    },
-    
-    scene: {
-        preload,
-        create,
-        update,
-    },
-    
+    height: 600,
+    parent: 'phaser-example',
+    scene: [Breakout],
     physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: false
-        },
+        default: 'arcade'
     }
 };
 
-const game = new Phaser.Game(config);
-
-
-function preload() {
-    this.load.image('ball', 'assets/ball_32_32.png');
-    this.load.image('paddle', 'assets/paddle_128_32.png');
-    this.load.image('brick1', 'assets/brick1_64_32.png');
-    this.load.image('brick2', 'assets/brick2_64_32.png');
-    this.load.image('brick3', 'assets/brick3_64_32.png');
-}
-
-
-function create() {
-    
-    player = this.physics.add.sprite(
-        400, 
-        600, 
-        'paddle', 
-    );
-
-    ball = this.physics.add.sprite(
-        400, 
-        565, 
-        'ball' 
-    );
-
-    violetBricks = this.physics.add.group({
-        key: 'brick1',
-        repeat: 9,
-        immovable: true,
-        setXY: {
-            x: 80,
-            y: 140,
-            stepX: 70
-        }
-    });
-
-    yellowBricks = this.physics.add.group({
-        key: 'brick2',
-        repeat: 9,
-        immovable: true,
-        setXY: {
-            x: 80,
-            y: 90,
-            stepX: 70
-        }
-    });
-
-    redBricks = this.physics.add.group({
-        key: 'brick3',
-        repeat: 9,
-        immovable: true,
-        setXY: {
-            x: 80,
-            y: 40,
-            stepX: 70
-        }
-    });
-
-    cursors = this.input.keyboard.createCursorKeys();
-
-    player.setCollideWorldBounds(true);
-    ball.setCollideWorldBounds(true);
-    
-    ball.setBounce(1, 1);
-
-    
-    this.physics.world.checkCollision.down = false;
-
-    // Add collision for the bricks
-    this.physics.add.collider(ball, violetBricks, hitBrick, null, this);
-    this.physics.add.collider(ball, yellowBricks, hitBrick, null, this);
-    this.physics.add.collider(ball, redBricks, hitBrick, null, this);
-
-    // Make the player immovable
-    player.setImmovable(true);
-    // Add collision for the player
-    this.physics.add.collider(ball, player, hitPlayer, null, this);
-
-    // Create opening text
-    openingText = this.add.text(
-        this.physics.world.bounds.width / 2,
-        this.physics.world.bounds.height / 2,
-        'Press SPACE to Start',
-        {
-            fontFamily: 'Monaco, Courier, monospace',
-            fontSize: '50px',
-            fill: '#fff'
-        },
-    );
-
-    /**
-     * The origin of the text object is at the top left, change the origin to the
-     * center so it can be properly aligned
-     */
-    openingText.setOrigin(0.5);
-
-    // Create game over text
-    gameOverText = this.add.text(
-        this.physics.world.bounds.width / 2,
-        this.physics.world.bounds.height / 2,
-        'Game Over',
-        {
-            fontFamily: 'Monaco, Courier, monospace',
-            fontSize: '50px',
-            fill: '#fff'
-        },
-    );
-
-    gameOverText.setOrigin(0.5);
-
-    // Make it invisible until the player loses
-    gameOverText.setVisible(false);
-
-    // Create the game won text
-    playerWonText = this.add.text(
-        this.physics.world.bounds.width / 2,
-        this.physics.world.bounds.height / 2,
-        'You won!',
-        {
-            fontFamily: 'Monaco, Courier, monospace',
-            fontSize: '50px',
-            fill: '#fff'
-        },
-    );
-
-    playerWonText.setOrigin(0.5);
-
-    // Make it invisible until the player wins
-    playerWonText.setVisible(false);
-}
-
-/**
- * Our game state is updated in this function. This corresponds exactly to the
- * update process of the game loop
- */
-function update() {
-    // Check if the ball left the scene i.e. game over
-    if (isGameOver(this.physics.world)) {
-        gameOverText.setVisible(true);
-        ball.disableBody(true, true);
-    } else if (isWon()) {
-        playerWonText.setVisible(true);
-        ball.disableBody(true, true);
-    } else {
-        // Put this in so that the player doesn't move if no key is being pressed
-        player.body.setVelocityX(0);
-
-        /**
-         * Check the cursor and move the velocity accordingly. With Arcade Physics we
-         * adjust velocity for movement as opposed to manipulating xy values directly
-         */
-        if (cursors.left.isDown) {
-            player.body.setVelocityX(-350);
-        } else if (cursors.right.isDown) {
-            player.body.setVelocityX(350);
-        }
-
-        // The game only begins when the user presses Spacebar to release the paddle
-        if (!gameStarted) {
-            // The ball should follow the paddle while the user selects where to start
-            ball.setX(player.x);
-
-            if (cursors.space.isDown) {
-                gameStarted = true;
-                ball.setVelocityY(-200);
-                openingText.setVisible(false);
-            }
-        }
-    }
-}
-
-/**
- * Checks if the user lost the game
- * @param world - the physics world
- * @return {boolean}
- */
-function isGameOver(world) {
-    return ball.body.y > world.bounds.height;
-}
-
-/**
- * Checks if the user won the game
- * @return {boolean}
- */
-function isWon() {
-    return violetBricks.countActive() + yellowBricks.countActive() + redBricks.countActive() == 0;
-}
-
-/**
- * This function handles the collision between a ball and a brick sprite
- * In the create function, ball is a sprite and violetBricks, yellowBricks and
- * redBricks are sprite groups. Phaser is smart enough to handle the collisions
- * for each individual sprite.
- * @param ball - the ball sprite
- * @param brick - the brick sprite
- */
-function hitBrick(ball, brick) {
-    brick.disableBody(true, true);
-
-    if (ball.body.velocity.x == 0) {
-        randNum = Math.random();
-        if (randNum >= 0.5) {
-            ball.body.setVelocityX(150);
-        } else {
-            ball.body.setVelocityX(-150);
-        }
-    }
-}
-
-/**
- * The function handles the collision between the ball and the player. We want
- * to ensure that the ball's direction after bouncing off the player is based
- * on which side of the player was hit. Also, to make things more difficult, we
- * want to increase the ball's velocity when it's hit.
- * @param ball - the ball sprite
- * @param player - the player/paddle sprite
- */
-function hitPlayer(ball, player) {
-    // Increase the velocity of the ball after it bounces
-    ball.setVelocityY(ball.body.velocity.y - 5);
-
-    let newXVelocity = Math.abs(ball.body.velocity.x) + 5;
-    // If the ball is to the left of the player, ensure the x velocity is negative
-    if (ball.x < player.x) {
-        ball.setVelocityX(-newXVelocity);
-    } else {
-        ball.setVelocityX(newXVelocity);
-    }
-}
+var game = new Phaser.Game(config);
