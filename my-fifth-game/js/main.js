@@ -1,6 +1,5 @@
 import "./phaser.js";
 
-phaserCreate the game object itself
 var game = new Phaser.Game(
     800, 600,                       // 800 x 600 rebackgroundolution.
     Phaser.AUTO,                    // Allow Phaser to determine Canvas or WebGL
