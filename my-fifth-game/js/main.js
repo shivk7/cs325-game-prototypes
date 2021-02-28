@@ -56,11 +56,11 @@ const game = new Phaser.Game(config);
  * loaded as key value pairs, we reference the assets by their keys of course
  */
 function preload() {
-    this.load.image('ball', 'assets/images/ball_32_32.png');
-    this.load.image('paddle', 'assets/images/paddle_128_32.png');
-    this.load.image('brick1', 'assets/images/brick1_64_32.png');
-    this.load.image('brick2', 'assets/images/brick2_64_32.png');
-    this.load.image('brick3', 'assets/images/brick3_64_32.png');
+    this.load.image('ball', '.assets/ball_32_32.png');
+    this.load.image('paddle', '.assets/paddle_128_32.png');
+    this.load.image('brick1', '.assets/brick1_64_32.png');
+    this.load.image('brick2', '.assets/brick2_64_32.png');
+    this.load.image('brick3', '.assets/brick3_64_32.png');
 }
 
 /**
