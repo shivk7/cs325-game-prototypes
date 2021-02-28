@@ -240,7 +240,7 @@ var helpers = {
             ball.setVelocityX(2 + Math.random() * 8);
         }
 
-update: function() {
+function update() {
         if (this.ball.y > 600) {
             this.resetBall();
         }
