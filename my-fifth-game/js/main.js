@@ -31,7 +31,7 @@ function preload() {
     this.load.image('brick2', './assets/brick2.png');
     this.load.image('brick3', './assets/brick3.png');
     this.load.image('brick4', './assets/brick4.png');
-    this.load.image('brick5', './assets/brick5.png
+    this.load.image('brick5', './assets/brick5.png');
 }
 
 function create() {
