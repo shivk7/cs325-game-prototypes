@@ -35,7 +35,7 @@ function preload() {
 }
 
 function create() {
-    game.stage.backgroundColor = "#FFFFFF";
+    game.stage.backgroundColor = 'rgb(255, 255, 255)';
 
     this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
     this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
@@ -103,7 +103,7 @@ function create() {
         'Score: 0',
         {
             fontFamily: 'Arial',
-            fontSize: '18px',
+            fontSize: '30px',
             fill: '#fff'
         }
     );
