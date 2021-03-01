@@ -32,6 +32,7 @@ function preload() {
     this.load.image('brick3', './assets/brick3.png');
     this.load.image('brick4', './assets/brick4.png');
     this.load.image('brick5', './assets/brick5.png');
+    this.load.image('white', './assets/white.png');
 }
 
 function create() {
@@ -65,7 +66,7 @@ function create() {
         {
             fontFamily: 'Arial',
             fontSize: '50px',
-            fill: '#fff'
+            fill: '#000'
         }
     );
     this.startText.setOrigin(0.5);
@@ -77,7 +78,7 @@ function create() {
         {
             fontFamily: 'Arial',
             fontSize: '50px',
-            fill: '#fff'
+            fill: '#000'
         }
     );
     this.gameOverText.setOrigin(0.5);
@@ -90,7 +91,7 @@ function create() {
         {
             fontFamily: 'Arial',
             fontSize: '50px',
-            fill: '#fff'
+            fill: '#000'
         }
     );
     this.winText.setOrigin(0.5);
@@ -103,7 +104,7 @@ function create() {
         {
             fontFamily: 'Arial',
             fontSize: '30px',
-            fill: '#fff'
+            fill: '#000'
         }
     );
 }
