@@ -31,12 +31,10 @@ function preload() {
     this.load.image('brick2', './assets/brick2.png');
     this.load.image('brick3', './assets/brick3.png');
     this.load.image('brick4', './assets/brick4.png');
-    this.load.image('brick5', './assets/brick5.png');
-    this.load.image('white', './assets/white.png');
+    this.load.image('brick5', './assets/brick5.png
 }
 
 function create() {
-    this.add.image(400, 300, 'white');
 
     this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
     this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
