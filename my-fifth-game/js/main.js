@@ -36,7 +36,7 @@ function preload() {
 }
 
 function create() {
-
+    this.add.image(400, 300, 'white');
     this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
     this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
 
