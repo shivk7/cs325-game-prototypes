@@ -169,7 +169,10 @@ function brickCollision(ball, brick) {
     }
 
     if (isWon(this.blueBricks, this.greenBricks, this.purpleBricks, this.yellowBricks, this.redBricks)) {
-        this.reset.level
+        this.winText.setVisible(true);
+        this.ball.destroy();
+        this.player.destroy();
+        gameWon = true;
     }
 }
 
