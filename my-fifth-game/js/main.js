@@ -35,6 +35,8 @@ function preload() {
 }
 
 function create() {
+    game.stage.backgroundColor = "#FFFFFF";
+
     this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
     this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
 
