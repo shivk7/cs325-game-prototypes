@@ -30,7 +30,7 @@ function preload() {
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     // tiles in spritesheet 
-    this.load.spritesheet('tiles', 'assets/house tiles.png', { frameWidth: 70, frameHeight: 70 });
+    this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
     // simple coin image
     this.load.image('coin', 'assets/coinGold.png');
     // player animations
@@ -45,6 +45,9 @@ function create() {
     var groundTiles = map.addTilesetImage('tiles');
     // create the ground layer
     groundLayer = map.createDynamicLayer('World', groundTiles, 0, 0);
+    // the player will collide with this layer
+    groundLayer.setCollisionByExclusion([-1]);
+
     // coin image used as tileset
     var coinTiles = map.addTilesetImage('coin');
     // add coins as tiles
