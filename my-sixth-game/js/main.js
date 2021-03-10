@@ -1,238 +1,183 @@
-import "./phaser.js";
-
-
-var SCREEN_WIDTH = 800;
-var SCREEN_HEIGHT = 600;
-var config = {
+const config = {
     type: Phaser.AUTO,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    parent: 'game',
+    width: 800,
+    heigth: 640,
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    scene: {
+        preload,
+        create,
+        update,
+    },
     physics: {
-        default: 'arcade'
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 500 },
+        },
     }
 };
 
-//================================================================================
+const game = new Phaser.Game(config);
 
-class Ship extends Phaser.GameObjects.Sprite {
+function preload() {
+    // Image layers from Tiled can't be exported to Phaser 3 (as yet)
+    // So we add the background image separately
+    this.load.image('background', 'assets/images/background.png');
+    // Load the tileset image file, needed for the map to know what
+    // tiles to draw on the screen
+    this.load.image('tiles', 'assets/tilesets/platformPack_tilesheet.png');
+    // Even though we load the tilesheet with the spike image, we need to
+    // load the Spike image separately for Phaser 3 to render it
+    this.load.image('spike', 'assets/images/spike.png');
+    // Load the export Tiled JSON
+    this.load.tilemapTiledJSON('map', 'assets/tilemaps/level1.json');
+    // Load player animations from the player spritesheet and atlas JSON
+    this.load.atlas('player', 'assets/images/kenney_player.png',
+        'assets/images/kenney_player_atlas.json');
+}
 
-    constructor(scene, x, y) {
-        super(scene, x, y);
-        this.setTexture('ship');
-        this.setPosition(x, y);
+function create() {
+    // Create a tile map, which is used to bring our level in Tiled
+    // to our game world in Phaser
+    const map = this.make.tilemap({ key: 'map' });
+    // Add the tileset to the map so the images would load correctly in Phaser
+    const tileset = map.addTilesetImage('kenney_simple_platformer', 'tiles');
+    // Place the background image in our game world
+    const backgroundImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+    // Scale the image to better match our game's resolution
+    backgroundImage.setScale(2, 0.8);
+    // Add the platform layer as a static group, the player would be able
+    // to jump on platforms like world collisions but they shouldn't move
+    const platforms = map.createStaticLayer('Platforms', tileset, 0, 200);
+    // There are many ways to set collision between tiles and players
+    // As we want players to collide with all of the platforms, we tell Phaser to
+    // set collisions for every tile in our platform layer whose index isn't -1.
+    // Tiled indices can only be >= 0, therefore we are colliding with all of
+    // the platform layer
+    platforms.setCollisionByExclusion(-1, true);
 
-        this.scene = scene;
-        this.deltaX = 5;
-        this.deltaY = 5;
-        this.lasers = new Array();
-        this.lastShot = new Date().getTime();
-        this.shotFrequency = 250;
-    }
+    // Add the player to the game world
+    this.player = this.physics.add.sprite(50, 300, 'player');
+    this.player.setBounce(0.1); // our player will bounce from items
+    this.player.setCollideWorldBounds(true); // don't go out of the map
+    this.physics.add.collider(this.player, platforms);
 
-    moveLeft() {
-        if (this.x > 0) {
-            this.x -= this.deltaX;
+    // Create the walking animation using the last 2 frames of
+    // the atlas' first row
+    this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNames('player', {
+            prefix: 'robo_player_',
+            start: 2,
+            end: 3,
+        }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    // Create an idle animation i.e the first frame
+    this.anims.create({
+        key: 'idle',
+        frames: [{ key: 'player', frame: 'robo_player_0' }],
+        frameRate: 10,
+    });
+
+    // Use the second frame of the atlas for jumping
+    this.anims.create({
+        key: 'jump',
+        frames: [{ key: 'player', frame: 'robo_player_1' }],
+        frameRate: 10,
+    });
+
+    // Enable user input via cursor keys
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    // Create a sprite group for all spikes, set common properties to ensure that
+    // sprites in the group don't move via gravity or by player collisions
+    this.spikes = this.physics.add.group({
+        allowGravity: false,
+        immovable: true
+    });
+
+    // Get the spikes from the object layer of our Tiled map. Phaser has a
+    // createFromObjects function to do so, but it creates sprites automatically
+    // for us. We want to manipulate the sprites a bit before we use them
+    const spikeObjects = map.getObjectLayer('Spikes')['objects'];
+    spikeObjects.forEach(spikeObject => {
+        // Add new spikes to our sprite group
+        const spike = this.spikes.create(spikeObject.x, spikeObject.y + 200 - spikeObject.height, 'spike').setOrigin(0, 0);
+        // By default the sprite has loads of whitespace from the base image, we
+        // resize the sprite to reduce the amount of whitespace used by the sprite
+        // so collisions can be more precise
+        spike.body.setSize(spike.width, spike.height - 20).setOffset(0, 20);
+    });
+
+    // Add collision between the player and the spikes
+    this.physics.add.collider(this.player, this.spikes, playerHit, null, this);
+}
+
+function update() {
+    // Control the player with left or right keys
+    if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else {
+        // If no keys are pressed, the player keeps still
+        this.player.setVelocityX(0);
+        // Only show the idle animation if the player is footed
+        // If this is not included, the player would look idle while jumping
+        if (this.player.body.onFloor()) {
+            this.player.play('idle', true);
         }
     }
 
-    moveRight() {
-        if (this.x < SCREEN_WIDTH) {
-            this.x += this.deltaX;
-        }
+    // Player can jump while walking any direction by pressing the space bar
+    // or the 'UP' arrow
+    if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
+        this.player.setVelocityY(-350);
+        this.player.play('jump', true);
     }
 
-    moveUp() {
-        if (this.y > 0) {
-            this.y -= this.deltaY;
-        }
-    }
-
-    moveDown() {
-
-        if (this.y < SCREEN_HEIGHT) {
-            this.y += this.deltaY;
-        }
-    }
-
-    fireLasers() {
-        var currentTime = new Date().getTime();
-        if (currentTime - this.lastShot > this.shotFrequency) {
-            var shipLaser = new ShipLaser(this.scene, this.x, this.y);
-            this.scene.add.existing(shipLaser);
-            this.lasers.push(shipLaser);
-            this.lastShot = currentTime;
-        }
-    }
-
-    preUpdate(time, delta) {
-        super.preUpdate(time, delta);
-
-        var i = 0;
-        var j = 0;
-        var lasersToRemove = new Array();
-
-        for (i = 0; i < this.lasers.length; i++) {
-            this.lasers[i].update();
-
-            if (this.lasers[i].y <= 0) {
-                lasersToRemove.push(this.lasers[i]);
-            }
-        }
-
-        for (j = 0; j < lasersToRemove.length; j++) {
-            var laserIndex = this.lasers.indexOf(lasersToRemove[j]);
-            this.lasers.splice(laserIndex, 1);
-            lasersToRemove[j].destroy();
-        }
+    // If the player is moving to the right, keep them facing forward
+    if (this.player.body.velocity.x > 0) {
+        this.player.setFlipX(false);
+    } else if (this.player.body.velocity.x < 0) {
+        // otherwise, make them face the other side
+        this.player.setFlipX(true);
     }
 }
 
-//================================================================================
-
-class ShipLaser extends Phaser.GameObjects.Sprite {
-
-    constructor(scene, x, y) {
-        super(scene, x, y);
-        this.setTexture('laser');
-        this.setPosition(x, y);
-        this.speed = 10;
-        this.scene = scene;
-        scene.physics.world.enable(this);
-        scene.physics.add.collider(this, scene.enemies, this.handleHit, null, this);
-    }
-
-    handleHit(laserSprite, enemySprite) {
-        enemySprite.destroy(true);
-        laserSprite.destroy(true);
-    }
-
-    preUpdate(time, delta) {
-        if (this.active == false) { return; }
-        super.preUpdate(time, delta);
-        this.y -= this.speed;
-    }
+/**
+ * playerHit resets the player's state when it dies from colliding with a spike
+ * @param {*} player - player sprite
+ * @param {*} spike - spike player collided with
+ */
+function playerHit(player, spike) {
+    // Set velocity back to 0
+    player.setVelocity(0, 0);
+    // Put the player back in its original position
+    player.setX(50);
+    player.setY(300);
+    // Use the default `idle` animation
+    player.play('idle', true);
+    // Set the visibility to 0 i.e. hide the player
+    player.setAlpha(0);
+    // Add a tween that 'blinks' until the player is gradually visible
+    let tw = this.tweens.add({
+        targets: player,
+        alpha: 1,
+        duration: 100,
+        ease: 'Linear',
+        repeat: 5,
+    });
 }
-
-//================================================================================
-
-class Enemy1 extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y);
-        this.setTexture('enemy1');
-        this.setPosition(x, y);
-        scene.physics.world.enable(this);
-
-        this.gameObject = this;
-        this.deltaX = 3;
-        this.deltaY = 3;
-    }
-
-    update() {
-        let k = Math.random() * 4;
-        k = Math.round(k);
-
-        if (k == 0) {
-            //this.moveUp();
-        }
-        else if (k == 2) {
-            this.moveLeft();
-        }
-        else if (k == 3) {
-            this.moveRight();
-        }
-    }
-
-    moveLeft() {
-        if (this.x > 0) {
-            this.x -= this.deltaX;
-        }
-    }
-
-    moveRight() {
-        if (this.x < SCREEN_WIDTH) {
-            this.x += this.deltaX;
-        }
-    }
-
-    moveUp() {
-        if (this.y > 0) {
-            this.y -= this.deltaY;
-        }
-    }
-
-    moveDown() {
-
-        if (this.y < SCREEN_HEIGHT) {
-            this.y += this.deltaY;
-        }
-    }
-}
-
-//================================================================================
-
-class Scene1 extends Phaser.Scene {
-
-    constructor(config) {
-        super(config);
-    }
-
-    preload() {
-        this.load.image('ship', 'assets/SpaceShooterRedux/PNG/playerShip1_orange.png');
-        this.load.image('laser', 'assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png');
-        this.load.image('enemy1', 'assets/SpaceShooterRedux/PNG/Enemies/enemyBlack3.png');
-    }
-
-    create() {
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.myShip = new Ship(this, 400, 500);
-        this.add.existing(this.myShip);
-        this.enemies = this.physics.add.group();
-        this.enemies2 = new Array();
-
-
-        let k = 0;
-        for (k = 0; k < 21; k++) {
-            let x = Math.random() * 800;
-            let y = Math.random() * 400;
-
-            this.enemy = new Enemy1(this, x, y);
-            this.add.existing(this.enemy);
-            this.enemies.add(this.enemy);
-            this.enemies2.push(this.enemy);
-        }
-
-    }
-
-    update() {
-        if (this.cursors.left.isDown) {
-            this.myShip.moveLeft();
-        }
-
-        if (this.cursors.right.isDown) {
-            this.myShip.moveRight();
-        }
-
-        if (this.cursors.up.isDown) {
-            this.myShip.moveUp();
-        }
-
-        if (this.cursors.down.isDown) {
-            this.myShip.moveDown();
-        }
-
-        if (this.cursors.space.isDown) {
-            this.myShip.fireLasers();
-        }
-
-        this.myShip.update();
-
-        let j = 0;
-        for (j = 0; j < this.enemies2.length; j++) {
-            let enemy = this.enemies2[j];
-            enemy.update();
-        }
-    }
-}
-
-var game = new Phaser.Game(config);
-game.scene.add('scene1', Scene1, true, { x: 400, y: 300 });
