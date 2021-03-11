@@ -19,6 +19,8 @@ const config = {
 
 const game = new Phaser.Game(config);
 var player;
+var cursors;
+
 function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
@@ -67,17 +69,24 @@ function create() {
 }
 
 function update() {
-    if (this.cursors.left.isDown) {
-        player.setVelocityX(-200);
-        if (player.body.onFloor()) {
-            player.play('walk', true);
-        }
-    } else if (this.cursors.right.isDown) {
-        player.setVelocityX(200);
-        if (player.body.onFloor()) {
-            player.play('walk', true);
-        }
-    } else {
+    cursors = this.input.keyboard.createCursorKeys();
+    if (cursors.left.isDown) {
+        player.setVelocityX((Math.random() * -800) - 2);
+
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown) {
+        player.setVelocityX((Math.random() * 800) + 1);
+
+        player.anims.play('right', true);
+    }
+    else {
         player.setVelocityX(0);
+
+        player.anims.play('turn');
+    }
+
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY((Math.random() * -600) - 100);
     }
 }
