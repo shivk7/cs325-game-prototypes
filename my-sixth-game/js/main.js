@@ -35,7 +35,7 @@ function create() {
 
 
     this.physics.world.bounds.width = 1600;
-    this.physics.world.bounds.height = 600;
+    this.physics.world.bounds.height = 800;
 
     player = this.physics.add.sprite(50, 300, 'player');
     player.setBounce(0.1);
