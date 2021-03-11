@@ -29,10 +29,11 @@ function create() {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('house tiles', 'tiles');
     const platform = map.createStaticLayer('platform', tileset, 0, 350);
+
     this.player = this.physics.add.sprite(50, 300, 'player');
     this.player.setBounce(0.1);
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, platform);
+    this.physics.add.collider(player, platform);
 }
 
 function update() {
