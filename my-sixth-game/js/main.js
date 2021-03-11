@@ -23,11 +23,16 @@ function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
     this.load.tilemapTiledJSON('map', 'assets/map.json');
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 function create() {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('house tiles', 'tiles');
     const platforms = map.createStaticLayer('platform', tileset, 0, 350);
+    this.player = this.physics.add.sprite(50, 300, 'player');
+    this.player.setBounce(0.1);
+    this.player.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, platforms);
 }
 
 function update() {
