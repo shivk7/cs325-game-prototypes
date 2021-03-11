@@ -43,28 +43,28 @@ function create() {
     this.cameras.main.startFollow(player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
+    //Gives player turning left animations
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
         frameRate: 10,
         repeat: -1
     })
 
+    //Gives player turn animations
     this.anims.create({
         key: 'turn',
-        frames: [{ key: 'player', frame: 4 }],
+        frames: [{ key: 'dude', frame: 4 }],
         frameRate: 10
     });
 
+    //Gives player truning right animations
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('player', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
         frameRate: 10,
         repeat: -1
     });
-
-    this.cursors = this.input.keyboard.createCursorKeys();
-
 
 }
 
@@ -87,6 +87,6 @@ function update() {
     }
 
     if (cursors.up.isDown && player.body.touching.down) {
-        player.setVelocityY((Math.random() * -600) - 100);
+        player.setVelocityY(-600);
     }
 }
