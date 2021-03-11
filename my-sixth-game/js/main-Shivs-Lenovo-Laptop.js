@@ -3,7 +3,6 @@ const config = {
     parent: 'game',
     width: 800,
     heigth: 600,
-   
     scene: {
         preload,
         create,
@@ -13,7 +12,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true,
+            debug: false,
         },
     }
 };
@@ -24,13 +23,12 @@ function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
     this.load.tilemapTiledJSON('map', 'assets/map.json');
-    this.load.image('player', 'assets/dude.png');
+    this.load.spritesheet('player', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 function create() {
     const map = this.make.tilemap({ key: 'map' });
-    const platform = map.createStaticLayer('platform', tileset, 0, 200);
-
-    platform.setCollisionByExclusion(-1, true);
+    const tileset = map.addTilesetImage('house tiles', 'tiles');
+    const platform = map.createStaticLayer('platform', tileset, 0, 350);
 
     this.player = this.physics.add.sprite(50, 300, 'player');
     this.player.setBounce(0.1);
