@@ -33,7 +33,7 @@ function create() {
     this.player = this.physics.add.sprite(50, 300, 'player');
     this.player.setBounce(0.1);
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(player, platform);
+    this.physics.add.collider(this.player, platform);
 }
 
 function update() {
