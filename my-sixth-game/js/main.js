@@ -67,7 +67,6 @@ function create() {
         repeat: -1
     });
 
-    this.cursors = this.input.keyboard.createCursorKeys();
 
 }
 
