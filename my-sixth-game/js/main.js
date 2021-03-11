@@ -19,7 +19,10 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-var cursors;
+var coinLayer;
+var text;
+var score = 0;
+
 function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
@@ -31,6 +34,8 @@ function create() {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('house tiles', 'tiles');
     const platform = map.createStaticLayer('platform', tileset, 0, 350);
+    var coinTiles = map.addTilesetImage('coin');
+    coinLayer = map.createDynamicLayer('Coins', coinTiles, 0, 0);
 
     platform.setCollisionByExclusion(-1, true);
 
@@ -43,10 +48,14 @@ function create() {
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, platform);
 
+    coinLayer.setTileIndexCallback(17, collectCoin, this);
+    this.physics.add.overlap(player, coinLayer);
+
     this.cameras.main.setBounds(0, 0, 3200, 600);
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
+    
     this.anims.create({
         key: 'walk',
         frames: this.anims.generateFrameNames('player', {
@@ -85,9 +94,20 @@ function create() {
     spike.body.setSize(spike.width, spike.height - 20).setOffset(0, 20);
     });
 
-this.physics.add.collider(this.player, this.spikes, playerHit, null, this);
+    this.physics.add.collider(this.player, this.spikes, playerHit, null, this);
+    text = this.add.text(20, 570, '0', {
+        fontSize: '20px',
+        fill: '#ffffff'
+    });
+    text.setScrollFactor(0);
 }
 
+function collectCoin(sprite, tile) {
+    coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
+    score++; // add 10 points to the score
+    text.setText(score); // set the text to show the current score
+    return false;
+}
 
 function update() {
     if (this.cursors.left.isDown) {
@@ -119,16 +139,11 @@ function update() {
     }
 }
 function playerHit(player, spike) {
-    // Set velocity back to 0
     player.setVelocity(0, 0);
-    // Put the player back in its original position
     player.setX(50);
     player.setY(300);
-    // Use the default `idle` animation
     player.play('idle', true);
-    // Set the visibility to 0 i.e. hide the player
     player.setAlpha(0);
-    // Add a tween that 'blinks' until the player is gradually visible
     let tw = this.tweens.add({
         targets: player,
         alpha: 1,
