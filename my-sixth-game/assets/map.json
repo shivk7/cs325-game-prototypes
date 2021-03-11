@@ -29,7 +29,7 @@
          "encoding":"base64",
          "height":7,
          "id":3,
-         "name":"coin",
+         "name":"Coins",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
