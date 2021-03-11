@@ -100,7 +100,7 @@ function update() {
     // Player can jump while walking any direction by pressing the space bar
     // or the 'UP' arrow
     if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
-        this.player.setVelocityY(-350);
+        this.player.setVelocityY(-150);
         this.player.play('jump', true);
     }
 
