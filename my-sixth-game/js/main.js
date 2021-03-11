@@ -3,10 +3,6 @@ const config = {
     parent: 'game',
     width: 800,
     heigth: 600,
-    scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    },
     scene: {
         preload,
         create,
@@ -16,7 +12,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: true,
+            debug: false,
         },
     }
 };
