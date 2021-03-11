@@ -43,6 +43,7 @@ function create() {
     this.cameras.main.startFollow(player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
+    cursors = this.input.keyboard.createCursorKeys();
     //Gives player turning left animations
     this.anims.create({
         key: 'left',
@@ -69,7 +70,6 @@ function create() {
 }
 
 function update() {
-    cursors = this.input.keyboard.createCursorKeys();
     if (cursors.left.isDown) {
         player.setVelocityX((Math.random() * -800) - 2);
 
