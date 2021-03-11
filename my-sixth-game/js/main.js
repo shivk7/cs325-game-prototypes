@@ -77,6 +77,38 @@ function create() {
 }
 
 function update() {
-  
-    
+    if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else {
+        // If no keys are pressed, the player keeps still
+        this.player.setVelocityX(0);
+        // Only show the idle animation if the player is footed
+        // If this is not included, the player would look idle while jumping
+        if (this.player.body.onFloor()) {
+            this.player.play('idle', true);
+        }
+    }
+
+    // Player can jump while walking any direction by pressing the space bar
+    // or the 'UP' arrow
+    if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
+        this.player.setVelocityY(-350);
+        this.player.play('jump', true);
+    }
+
+    // If the player is moving to the right, keep them facing forward
+    if (this.player.body.velocity.x > 0) {
+        this.player.setFlipX(false);
+    } else if (this.player.body.velocity.x < 0) {
+        // otherwise, make them face the other side
+        this.player.setFlipX(true);
+    }
 }
