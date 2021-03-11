@@ -25,6 +25,7 @@ function preload() {
     this.load.image('tiles', 'assets/house tiles.png');
     this.load.tilemapTiledJSON('map', 'assets/map.json');
     this.load.atlas('player', 'assets/kenney_player.png', 'assets/kenney_player_atlas.json');
+    this.load.image('spike', 'assets/spike.png');
 }
 function create() {
     const map = this.make.tilemap({ key: 'map' });
@@ -57,14 +58,12 @@ function create() {
         repeat: -1
     });
 
-    // Create an idle animation i.e the first frame
     this.anims.create({
         key: 'idle',
         frames: [{ key: 'player', frame: 'robo_player_0' }],
         frameRate: 10,
     });
 
-    // Use the second frame of the atlas for jumping
     this.anims.create({
         key: 'jump',
         frames: [{ key: 'player', frame: 'robo_player_1' }],
@@ -72,9 +71,17 @@ function create() {
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
-    
 
+    this.spikes = this.physics.add.group({
+        allowGravity: false,
+        immovable: true
+    });
 
+    const spikeObjects = map.getObjectLayer('Spikes')['objects'];
+
+    spikeObjects.forEach(spikeObject => {
+        const spike = this.spikes.create(spikeObject.x, spikeObject.y + 200 - spikeObject.height, 'spike').setOrigin(0, 0);
+    });
 }
 
 function update() {
@@ -89,27 +96,40 @@ function update() {
             this.player.play('walk', true);
         }
     } else {
-        // If no keys are pressed, the player keeps still
         this.player.setVelocityX(0);
-        // Only show the idle animation if the player is footed
-        // If this is not included, the player would look idle while jumping
         if (this.player.body.onFloor()) {
             this.player.play('idle', true);
         }
     }
 
-    // Player can jump while walking any direction by pressing the space bar
-    // or the 'UP' arrow
     if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
         this.player.setVelocityY(-250);
         this.player.play('jump', true);
     }
 
-    // If the player is moving to the right, keep them facing forward
     if (this.player.body.velocity.x > 0) {
         this.player.setFlipX(false);
     } else if (this.player.body.velocity.x < 0) {
-        // otherwise, make them face the other side
         this.player.setFlipX(true);
     }
+}
+
+function playerHit(player, spike) {
+    // Set velocity back to 0
+    player.setVelocity(0, 0);
+    // Put the player back in its original position
+    player.setX(50);
+    player.setY(300);
+    // Use the default `idle` animation
+    player.play('idle', true);
+    // Set the visibility to 0 i.e. hide the player
+    player.setAlpha(0);
+    // Add a tween that 'blinks' until the player is gradually visible
+    let tw = this.tweens.add({
+        targets: player,
+        alpha: 1,
+        duration: 100,
+        ease: 'Linear',
+        repeat: 5,
+    });
 }
