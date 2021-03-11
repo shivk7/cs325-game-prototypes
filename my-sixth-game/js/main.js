@@ -67,5 +67,18 @@ function create() {
 }
 
 function update() {
-
+    if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(200);
+        if (this.player.body.onFloor()) {
+            this.player.play('walk', true);
+        }
+    } else {
+        // If no keys are pressed, the player keeps still
+        this.player.setVelocityX(0);
+    }
 }
