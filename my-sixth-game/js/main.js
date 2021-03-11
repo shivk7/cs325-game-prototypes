@@ -81,13 +81,13 @@ function create() {
 
     spikeObjects.forEach(spikeObject => {
         const spike = this.spikes.create(spikeObject.x, spikeObject.y + 350 - spikeObject.height, 'spike').setOrigin(0, 0);
-    });
+    
     spike.body.setSize(spike.width, spike.height - 20).setOffset(0, 20);
-});
+    });
 
 this.physics.add.collider(this.player, this.spikes, playerHit, null, this);
 }
-}
+
 
 function update() {
     if (this.cursors.left.isDown) {
