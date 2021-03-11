@@ -31,7 +31,7 @@ function preload() {
 function create() {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('house tiles', 'tiles');
-    const platforms = map.createStaticLayer('platform', tileset, 0, 100);
+    const platforms = map.createStaticLayer('platform', tileset, 0, 400);
 }
 
 function update() {
