@@ -19,7 +19,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 var player;
-
+var cursors;
 function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
