@@ -31,7 +31,7 @@ function preload() {
 function create() {
     const map = this.make.tilemap({ key: 'map' });
     const platforms = map.createStaticLayer('platform', tileset, 0, 200);
-    const platforms = map.createStaticLayer('coin', tileset, 0, 200);
+    const coins = map.createStaticLayer('coin', tileset, 0, 200);
 
 }
 
