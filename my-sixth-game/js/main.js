@@ -33,6 +33,10 @@ function create() {
 
     platform.setCollisionByExclusion(-1, true);
 
+
+    this.physics.world.bounds.width = 1600;
+    this.physics.world.bounds.height = 600;
+
     player = this.physics.add.sprite(50, 300, 'player');
     player.setBounce(0.1);
     player.setCollideWorldBounds(true);
