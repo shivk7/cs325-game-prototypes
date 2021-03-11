@@ -37,6 +37,10 @@ function create() {
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, platform);
 
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.startFollow(player);
+    this.cameras.main.setBackgroundColor('#ccccff'); 
+
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
