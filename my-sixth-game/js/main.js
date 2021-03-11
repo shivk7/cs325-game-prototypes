@@ -57,14 +57,12 @@ function create() {
         repeat: -1
     });
 
-    // Create an idle animation i.e the first frame
     this.anims.create({
         key: 'idle',
         frames: [{ key: 'player', frame: 'robo_player_0' }],
         frameRate: 10,
     });
 
-    // Use the second frame of the atlas for jumping
     this.anims.create({
         key: 'jump',
         frames: [{ key: 'player', frame: 'robo_player_1' }],
@@ -72,7 +70,17 @@ function create() {
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
-    
+
+    this.spikes = this.physics.add.group({
+        allowGravity: false,
+        immovable: true
+    });
+
+    const spikeObjects = map.getObjectLayer('Spikes')['objects'];
+
+    spikeObjects.forEach(spikeObject => {
+        const spike = this.spikes.create(spikeObject.x, spikeObject.y + 200 - spikeObject.height, 'spike').setOrigin(0, 0);
+    });
 
 }
 
@@ -88,27 +96,20 @@ function update() {
             this.player.play('walk', true);
         }
     } else {
-        // If no keys are pressed, the player keeps still
         this.player.setVelocityX(0);
-        // Only show the idle animation if the player is footed
-        // If this is not included, the player would look idle while jumping
         if (this.player.body.onFloor()) {
             this.player.play('idle', true);
         }
     }
 
-    // Player can jump while walking any direction by pressing the space bar
-    // or the 'UP' arrow
     if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
         this.player.setVelocityY(-250);
         this.player.play('jump', true);
     }
 
-    // If the player is moving to the right, keep them facing forward
     if (this.player.body.velocity.x > 0) {
         this.player.setFlipX(false);
     } else if (this.player.body.velocity.x < 0) {
-        // otherwise, make them face the other side
         this.player.setFlipX(true);
     }
 }
