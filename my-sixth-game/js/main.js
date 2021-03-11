@@ -34,7 +34,7 @@ function create() {
     platform.setCollisionByExclusion(-1, true);
 
 
-    this.physics.world.bounds.width = 2600;
+    this.physics.world.bounds.width = 3000;
     this.physics.world.bounds.height = 800;
 
     this.player = this.physics.add.sprite(50, 300, 'player');
@@ -42,7 +42,7 @@ function create() {
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, platform);
 
-    this.cameras.main.setBounds(0, 0, 2600, 600);
+    this.cameras.main.setBounds(0, 0, 3000, 600);
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
