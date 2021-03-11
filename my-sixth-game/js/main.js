@@ -12,7 +12,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 },
-            debug: false,
+            debug: true,
         },
     }
 };
@@ -112,24 +112,4 @@ function update() {
     } else if (this.player.body.velocity.x < 0) {
         this.player.setFlipX(true);
     }
-}
-
-function playerHit(player, spike) {
-    // Set velocity back to 0
-    player.setVelocity(0, 0);
-    // Put the player back in its original position
-    player.setX(50);
-    player.setY(300);
-    // Use the default `idle` animation
-    player.play('idle', true);
-    // Set the visibility to 0 i.e. hide the player
-    player.setAlpha(0);
-    // Add a tween that 'blinks' until the player is gradually visible
-    let tw = this.tweens.add({
-        targets: player,
-        alpha: 1,
-        duration: 100,
-        ease: 'Linear',
-        repeat: 5,
-    });
 }
