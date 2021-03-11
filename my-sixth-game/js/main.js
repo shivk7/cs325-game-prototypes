@@ -18,7 +18,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-
+var player;
 function preload() {
     this.load.image('coins', 'assets/coinGold.png');
     this.load.image('tiles', 'assets/house tiles.png');
@@ -32,10 +32,10 @@ function create() {
 
     platform.setCollisionByExclusion(-1, true);
 
-    this.player = this.physics.add.sprite(50, 300, 'player');
-    this.player.setBounce(0.1);
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, platform);
+    player = this.physics.add.sprite(50, 300, 'player');
+    player.setBounce(0.1);
+    player.setCollideWorldBounds(true);
+    this.physics.add.collider(player, platform);
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(player);
