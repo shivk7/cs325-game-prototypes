@@ -80,7 +80,7 @@ function create() {
     const spikeObjects = map.getObjectLayer('Spikes')['objects'];
 
     spikeObjects.forEach(spikeObject => {
-        const spike = this.spikes.create(spikeObject.x, spikeObject.y + 400 - spikeObject.height, 'spike').setOrigin(0, 0);
+        const spike = this.spikes.create(spikeObject.x, spikeObject.y + 350 - spikeObject.height, 'spike').setOrigin(0, 0);
     });
 }
 
