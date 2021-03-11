@@ -19,7 +19,6 @@ const config = {
 
 const game = new Phaser.Game(config);
 var player;
-var cursors;
 
 function preload() {
     this.load.image('coins', 'assets/coinGold.png');
@@ -43,11 +42,12 @@ function create() {
     this.cameras.main.startFollow(player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
-    cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys();
+
     //Gives player turning left animations
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
         frameRate: 10,
         repeat: -1
     })
@@ -55,28 +55,31 @@ function create() {
     //Gives player turn animations
     this.anims.create({
         key: 'turn',
-        frames: [{ key: 'dude', frame: 4 }],
+        frames: [{ key: 'player', frame: 4 }],
         frameRate: 10
     });
 
     //Gives player truning right animations
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('player', { start: 5, end: 8 }),
         frameRate: 10,
         repeat: -1
     });
 
+    this.cursors = this.input.keyboard.createCursorKeys();
+
 }
 
 function update() {
+    cursors = this.input.keyboard.createCursorKeys();
     if (cursors.left.isDown) {
-        player.setVelocityX((Math.random() * -800) - 2);
+        player.setVelocityX(-600);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown) {
-        player.setVelocityX((Math.random() * 800) + 1);
+        player.setVelocityX(600);
 
         player.anims.play('right', true);
     }
@@ -89,4 +92,5 @@ function update() {
     if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-600);
     }
+    
 }
