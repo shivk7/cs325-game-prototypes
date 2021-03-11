@@ -28,11 +28,11 @@ function preload() {
 function create() {
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('house tiles', 'tiles');
-    const platforms = map.createStaticLayer('platform', tileset, 0, 350);
+    const platform = map.createStaticLayer('platform', tileset, 0, 350);
     this.player = this.physics.add.sprite(50, 300, 'player');
     this.player.setBounce(0.1);
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, platforms);
+    this.physics.add.collider(this.player, platform);
 }
 
 function update() {
