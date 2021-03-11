@@ -38,7 +38,7 @@ function create() {
     player.setCollideWorldBounds(true);
     this.physics.add.collider(player, platform);
 
-    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.setBounds(0, 0, 1600, 600);
     this.cameras.main.startFollow(player);
     this.cameras.main.setBackgroundColor('#ccccff'); 
 
@@ -89,7 +89,7 @@ function update() {
     }
 
     if (cursors.up.isDown && player.body.touching.down) {
-        player.setVelocityY(-600);
+        player.setVelocityY(600);
     }
     
 }
