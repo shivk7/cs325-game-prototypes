@@ -1,5 +1,3 @@
-import "./phaser.js";
-
 const config = {
     type: Phaser.AUTO,
     parent: 'game',
