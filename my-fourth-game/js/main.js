@@ -1,271 +1,210 @@
 import "./phaser.js";
 
-
-
-
 var config = {
     type: Phaser.AUTO,
     width: 800,
-    height: 600,
+    height: 640,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
-            debug: false
-        }
+            gravity: false,
+            //debug: true
+        },
     },
     scene: {
         preload: preload,
         create: create,
         update: update
-    },
-    input: {
-        gamepad: true
-    },
+    }
 };
-//variables
+
 var game = new Phaser.Game(config);
-var platform;
-var platform2;
-var player;
-var cursors;
-var coin;
-var coin2;
-var loot;
+var gameStarted = false;
 var score = 0;
 var scoreText;
+var gameWon = false;
 
 function preload() {
-    //this is the part where you insert all your images and sprites.
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('coin', 'assets/diamond.png');
-    this.load.image('coin2', 'assets/diamond2.png');
-    this.load.image('loot', 'assets/loot.png');
-    this.load.image('floor', 'assets/ground.png');
-    this.load.image('platform', 'assets/platform2.png');
-    this.load.image('bomb', 'assets/bomb.png')
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-
+    this.load.image('ball', './assets/ball.png');
+    this.load.image('paddle', './assets/paddle.png');
+    this.load.image('brick1', './assets/brick1.png');
+    this.load.image('brick2', './assets/brick2.png');
+    this.load.image('brick3', './assets/brick3.png');
+    this.load.image('brick4', './assets/brick4.png');
+    this.load.image('brick5', './assets/brick5.png');
+    this.load.image('white', './assets/white.png');
 }
 
 function create() {
-    //backgoruand needs to be first here, if you don't then the other images will be coverd up.
-    this.add.image(400, 300, 'sky');
-    //platforms
+    this.add.image(400, 300, 'white');
+    this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
+    this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);
 
-    platform = this.physics.add.staticGroup();
-    platform2 = this.physics.add.staticGroup();
+    this.blueBricks = createBricksGroup('brick1', 170, this);
+    this.greenBricks = createBricksGroup('brick2', 140, this);
+    this.purpleBricks = createBricksGroup('brick3', 110, this);
+    this.yellowBricks = createBricksGroup('brick4', 80, this);
+    this.redBricks = createBricksGroup('brick5', 50, this);
 
-    platform.create(400, 572, 'floor').setScale(2).refreshBody();
-    platform.create(1200, 572, 'floor').setScale(2).refreshBody();
-    platform.create(400, -30, 'floor').setScale(2).refreshBody();
-    platform.create(1200, -30, 'floor').setScale(2).refreshBody();
+    this.ball.setCollideWorldBounds(true);
+    this.ball.setBounce(1, 1);
+    this.physics.world.checkCollision.down = false;
 
-    platform2.create(30, 519, 'platform');
-    platform2.create(30, 499, 'platform');
-    platform2.create(30, 479, 'platform');
-    platform2.create(30, 459, 'platform');
-    platform2.create(30, 439, 'platform');
-    platform2.create(30, 419, 'platform');
-    platform2.create(30, 399, 'platform');
-    platform2.create(30, 379, 'platform');
-    platform2.create(30, 359, 'platform');
-    platform2.create(30, 339, 'platform');
-    platform2.create(30, 319, 'platform');
-    platform2.create(30, 299, 'platform');
-    platform2.create(30, 279, 'platform');
-    platform2.create(30, 259, 'platform');
-    platform2.create(30, 239, 'platform');
-    platform2.create(30, 219, 'platform');
-    platform2.create(30, 199, 'platform');
-    platform2.create(30, 179, 'platform');
-    platform2.create(30, 159, 'platform');
-    platform2.create(30, 139, 'platform');
-    platform2.create(30, 119, 'platform');
-    platform2.create(30, 99, 'platform');
-    platform2.create(30, 79, 'platform');
-    platform2.create(30, 59, 'platform');
-    platform2.create(30, 39, 'platform');
-    platform2.create(30, 19, 'platform');
-    platform2.create(30, 9, 'platform');
-    //other side
+    this.physics.add.collider(this.ball, this.blueBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.greenBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.purpleBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.yellowBricks, brickCollision, null, this);
+    this.physics.add.collider(this.ball, this.redBricks, brickCollision, null, this);
 
-    platform2.create(1580, 519, 'platform');
-    platform2.create(1580, 499, 'platform');
-    platform2.create(1580, 479, 'platform');
-    platform2.create(1580, 459, 'platform');
-    platform2.create(1580, 439, 'platform');
-    platform2.create(1580, 419, 'platform');
-    platform2.create(1580, 399, 'platform');
-    platform2.create(1580, 379, 'platform');
-    platform2.create(1580, 359, 'platform');
-    platform2.create(1580, 339, 'platform');
-    platform2.create(1580, 319, 'platform');
-    platform2.create(1580, 299, 'platform');
-    platform2.create(1580, 279, 'platform');
-    platform2.create(1580, 259, 'platform');
-    platform2.create(1580, 239, 'platform');
-    platform2.create(1580, 219, 'platform');
-    platform2.create(1580, 199, 'platform');
-    platform2.create(1580, 179, 'platform');
-    platform2.create(1580, 159, 'platform');
-    platform2.create(1580, 139, 'platform');
-    platform2.create(1580, 119, 'platform');
-    platform2.create(1580, 99, 'platform');
-    platform2.create(1580, 79, 'platform');
-    platform2.create(1580, 59, 'platform');
-    platform2.create(1580, 39, 'platform');
-    platform2.create(1580, 19, 'platform');
-    platform2.create(1580, 9, 'platform');
-    // chalenge
+    this.player.setImmovable(true);
+    this.physics.add.collider(this.ball, this.player, playerCollision, null, this);
 
-    platform2.create(200, 519, 'platform');
-    platform2.create(200, 489, 'platform');
-    platform2.create(200, 459, 'platform');
+    this.startText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'Click to Play',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#000'
+        }
+    );
+    this.startText.setOrigin(0.5);
 
-    platform2.create(100, 120, 'platform');
-    platform2.create(170, 120, 'platform');
+    this.gameOverText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'Game Over!',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#000'
+        }
+    );
+    this.gameOverText.setOrigin(0.5);
+    this.gameOverText.setVisible(false);
 
-    platform2.create(300, 300, 'platform');
+    this.winText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'You Win!',
+        {
+            fontFamily: 'Arial',
+            fontSize: '50px',
+            fill: '#000'
+        }
+    );
+    this.winText.setOrigin(0.5);
+    this.winText.setVisible(false);
 
-    platform2.create(400, 120, 'platform');
-    platform2.create(470, 120, 'platform');
-    platform2.create(540, 120, 'platform');
-
-    platform2.create(600, 520, 'platform');
-    platform2.create(600, 490, 'platform');
-    platform2.create(600, 460, 'platform');
-
-    platform2.create(1000, 200, 'platform');
-    platform2.create(1070, 200, 'platform');
-    platform2.create(1140, 200, 'platform');
-
-    //player
-
-    //creates the player
-    player = this.physics.add.sprite(100, 450, 'dude');
-
-    player.setBounce(0.1);
-    //Gives player turning left animations
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-        frameRate: 10,
-        repeat: -1
-    })
-
-    //Gives player turn animations
-    this.anims.create({
-        key: 'turn',
-        frames: [{ key: 'dude', frame: 4 }],
-        frameRate: 10
-    });
-
-    //Gives player truning right animations
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-        frameRate: 10,
-        repeat: -1
-    });
-
-    //Physics
-    player.body.setGravityY(300)
-    this.physics.add.collider(player, platform);
-    this.physics.add.collider(player, platform2);
-
-    //camera
-    this.cameras.main.setBounds(0, 0, 1600, 600)
-    this.cameras.main.startFollow(player);
-
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
-    //coin
-    coin = this.physics.add.group({
-        key: 'coin',
-        repeat: 6,
-        setXY: { x: 100, y: 30, stepX: 65 }
-    });
-
-    coin.children.iterate(function (child) {
-
-        child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.2));
-
-    });
-
-    this.physics.add.collider(coin, platform2);
-    this.physics.add.overlap(player, coin, collectCoin, null, this);
-    function collectCoin(player, Coin) {
-        Coin.disableBody(true, true);
-        score += 10;
-        scoreText.setText('Score: ' + score);
-    }
-
-    //Coin 2
-    coin2 = this.physics.add.group({
-        key: 'coin2',
-        repeat: 1,
-        setXY: { x: 600, y: 20, stepX: 470 }
-    });
-
-    coin2.children.iterate(function (child) {
-
-        child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.2));
-    });
-    this.physics.add.collider(coin2, platform2);
-    this.physics.add.overlap(player, coin2, collectCoin2, null, this);
-
-    function collectCoin2(player, Coin2) {
-        Coin2.disableBody(true, true);
-        score += 10;
-        scoreText.setText('Score: ' + score);
-    }
-    //loot
-    loot = this.physics.add.group({
-        key: 'loot',
-        repeat: 0,
-        setXY: { x: 1520, y: 400, stepX: 0 }
-    });
-
-    loot.children.iterate(function (child) {
-
-        child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.2));
-
-    });
-
-    this.physics.add.collider(loot, platform);
-    this.physics.add.overlap(player, loot, collectLoot, null, this);
-    function collectLoot(player, loot) {
-        loot.disableBody(true, true);
-        score += 110;
-        scoreText.setText('Score: ' + score);
-    }
-
+    scoreText = this.add.text(
+        10,
+        10,
+        'Score: 0',
+        {
+            fontFamily: 'Arial',
+            fontSize: '30px',
+            fill: '#000'
+        }
+    );
 }
 
+function createBricksGroup(name, y, scene) {
+    return scene.physics.add.group({
+        key: name,
+        repeat: 8,
+        immovable: true,
+        setXY: {
+            x: 80,
+            y: y,
+            stepX: 80
+        },
+        setScale: { x: 0.2, y: 0.2 }
+    });
+}
 
 function update() {
-    scoreText.x = player.body.position.x;
+    if (!gameWon) {
+        if (isGameOver(this.physics.world, this.ball)) {
+            this.gameOverText.setVisible(true);
+            this.ball.destroy()
+            this.player.destroy();
+        } else {
+            this.player.setX(this.input.x);
+            if (!gameStarted) {
+                this.ball.setX(this.player.x);
 
-    //keyboard
-    cursors = this.input.keyboard.createCursorKeys();
-    if (cursors.left.isDown) {
-        player.setVelocityX((Math.random() * -800) - 2);
-
-        player.anims.play('left', true);
+                if (this.input.activePointer.isDown) {
+                    gameStarted = true;
+                    this.ball.setVelocityY(-300);
+                    this.startText.setVisible(false);
+                }
+            }
+        }
     }
-    else if (cursors.right.isDown) {
-        player.setVelocityX((Math.random() * 800) + 1);
+}
 
-        player.anims.play('right', true);
-    }
-    else {
-        player.setVelocityX(0);
+function isGameOver(world, ball) {
+    return ball.body ? ball.body.y > world.bounds.height : true;
+}
 
-        player.anims.play('turn');
+function isWon(blueBricks, greenBricks, purpleBricks, yellowBricks, redBricks) {
+    return (
+        blueBricks.countActive() === 0 &&
+        greenBricks.countActive() === 0 &&
+        purpleBricks.countActive() === 0 &&
+        yellowBricks.countActive() === 0 &&
+        redBricks.countActive() === 0
+    );
+}
+
+function brickCollision(ball, brick) {
+    brick.destroy();
+    addScore(brick);
+
+    if (ball.body.velocity.x === 0) {
+        if (ball.x < brick.x) {
+            ball.body.setVelocityX(-130);
+        } else {
+            ball.body.setVelocityX(130);
+        }
     }
 
-    if (cursors.up.isDown && player.body.touching.down) {
-        player.setVelocityY((Math.random() * -600) - 100);
+    if (isWon(this.blueBricks, this.greenBricks, this.purpleBricks, this.yellowBricks, this.redBricks)) {
+        this.winText.setVisible(true);
+        this.ball.destroy();
+        this.player.destroy();
+        gameWon = true;
     }
+}
+
+function playerCollision(ball, player) {
+    var velX = Math.abs(ball.body.velocity.x);
+
+    if (ball.x < player.x) {
+        ball.setVelocityX(-velX);
+    } else {
+        ball.setVelocityX(velX);
+    }
+}
+
+function addScore(brick) {
+    switch (brick.texture.key) {
+        case "brick1":
+            score += 10;
+            break;
+        case "brick2":
+            score += 20;
+            break;
+        case "brick3":
+            score += 30;
+            break;
+        case "brick4":
+            score += 40;
+            break;
+        case "brick5":
+            score += 50;
+            break;
+    }
+    scoreText.setText('Score: ' + score);
 }
