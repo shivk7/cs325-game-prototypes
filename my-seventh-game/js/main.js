@@ -39,13 +39,13 @@ function create() {
     this.add.image(600, 400, '10')
 
 
-    this.card1 = this.add.image(200, 200, 'card1');
-    this.card2 = this.add.image(400, 200, 'card2');
-    this.card3 = this.add.image(600, 200, 'card3');
+    this.card1 = this.add.image(100, 100, 'card1');
+    this.card2 = this.add.image(400, 100, 'card2');
+    this.card3 = this.add.image(700, 100, 'card3');
 
-    this.card4 = this.add.image(200, 400, 'card4');
-    this.card5 = this.add.image(400, 400, 'card5');
-    this.card6 = this.add.image(600, 400, 'card6');
+    this.card4 = this.add.image(100, 500, 'card4');
+    this.card5 = this.add.image(400, 500, 'card5');
+    this.card6 = this.add.image(700, 500, 'card6');
 
     this.card1.setInteractive();
     this.card2.setInteractive();
