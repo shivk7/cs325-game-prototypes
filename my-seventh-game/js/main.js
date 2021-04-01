@@ -13,40 +13,27 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var card1
-var card2
+
 function preload() {
     this.load.image('card1', 'assets/cardBack.png')
-    this.load.image('card2', 'assets/cardBack1.png')
+    this.load.image('card2', 'assets/cardBack.png')
     this.load.image('cat', 'assets/cat.png')
 }
 
 function create() {
-    this.add.image(400, 300, 'cat')
-    this.add.image(500, 300, 'cat')
+    this.add.image(300, 300, 'cat')
+    this.add.image(600, 300, 'cat')
 
-    card1 = this.add.image(400, 300, 'card1');
-    card2 = this.add.image(500, 300, 'card2');
+    this.card1 = this.add.image(300, 300, 'card1');
+    this.card2 = this.add.image(600, 300, 'card2');
 
-    this.input.once('pointerdown', function () {
+    this.card1.setOrigin(0.5, 0.5);
+    this.card2.setOrigin(0.5, 0.5);
 
-        console.log('nuked');
-
-        card1.remove();
-
-        card1 = null;
-
-    });
-
-    this.input.once('pointerdown', function () {
-
-        console.log('nuked');
-
-        card2.remove();
-
-        card1 = null;
-
-    });
+    this.input.on('gameobjectdown', this.onClicked.bind(this));
+}
+onClicked(pointer, objectClicked) {
+    objectClicked.destroy();
 }
 
 function update() {
