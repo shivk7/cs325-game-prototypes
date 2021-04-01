@@ -24,10 +24,11 @@ function create() {
     this.add.image(300, 300, 'cat')
     this.add.image(600, 300, 'cat')
 
-    this.add.image(300, 300, 'card1');
-    this.add.image(600, 300, 'card2');
+    this.card1 = this.add.image(300, 300, 'card1');
+    this.card2 = this.add.image(600, 300, 'card2');
 
-    
+    this.card1.setInteractive();
+    this.card2.setInteractive();
 
     this.input.on('gameobjectdown', function (pointer, gameObject) {
 
