@@ -49,12 +49,12 @@ class BootScene extends Phaser.Scene {
 		// I got these images from:
 		// 		http://opengameart.com	
 		// 		CoMiGo - https://comigo.itch.io/
-		this.load.image('cat', 'assets/images/cat.png');
-		this.load.image('chick', 'assets/images/chick.png');
-		this.load.image('fox', 'assets/images/fox.png');
-		this.load.image('mouse', 'assets/images/mouse.png');
-		this.load.image('pig', 'assets/images/pig.png');
-		this.load.image('rabbit', 'assets/images/rabbit.png');
+		this.load.image('cat', 'assets/cat.png');
+		this.load.image('chick', 'assets/chick.png');
+		this.load.image('fox', 'assets/fox.png');
+		this.load.image('mouse', 'assets/mouse.png');
+		this.load.image('pig', 'assets/pig.png');
+		this.load.image('rabbit', 'assets/rabbit.png');
 
 		// I got these clips from http://opengameart.com
 		this.load.audio('yay', 'assets/sounds/round_end.wav');
