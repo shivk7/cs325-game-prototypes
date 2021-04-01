@@ -17,7 +17,7 @@ var card1
 var card2
 function preload() {
     this.load.image('card1', 'assets/cardBack.png')
-    this.load.image('card2', 'assets/cardBack.png')
+    this.load.image('card2', 'assets/cardBack1.png')
     this.load.image('cat', 'assets/cat.png')
 }
 
@@ -27,6 +27,7 @@ function create() {
 
     card1 = this.add.image(300, 300, 'card1');
     card2 = this.add.image(600, 300, 'card2');
+
 
     this.input.once('pointerdown', function () {
 
