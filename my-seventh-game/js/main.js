@@ -1,5 +1,3 @@
-import "./phaser.js";
-
 // the game itself
 var game;
 
