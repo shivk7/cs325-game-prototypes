@@ -31,11 +31,11 @@ function create() {
     this.card2.setInteractive()
 
     this.input.on('gameobjectdown', this.onClicked.bind(this));
-    onClicked(pointer, objectClicked) {
+    onClicked(pointer, objectClicked);{
         objectClicked.destroy();
 
-    
-}
 
-function update() {
+    }
 }
+    function update() {
+    }
