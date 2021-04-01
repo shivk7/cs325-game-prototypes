@@ -34,6 +34,5 @@ function create() {
         gameObject.destroy();
 
     });}
-o
 function update() {
 }
