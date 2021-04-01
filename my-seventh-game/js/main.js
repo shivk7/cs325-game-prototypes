@@ -32,7 +32,7 @@ function create() {
 
     this.input.on('gameobjectdown', this.onClicked.bind(this));
 }
-onClicked(pointer, objectClicked) {
+onClicked(pointer, objectClicked);{
     objectClicked.destroy();
 }
 
