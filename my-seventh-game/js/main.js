@@ -1,5 +1,3 @@
-import "./phaser.js";
-
 // game.js - final memory game javascript file
 // memory game by David O'Donnel - davidodonnel.com
 var game;
