@@ -1,3 +1,5 @@
+import "./phaser.js";
+
 let config = {
     type: Phaser.AUTO,
     width: 800,
