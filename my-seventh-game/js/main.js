@@ -43,8 +43,8 @@ class BootScene extends Phaser.Scene {
 
 	preload() {
 		// Dave O made these with photoShop
-		this.load.image('header', 'assets/images/header.png');
-		this.load.image('cardBack', 'assets/images/cardBack.png');
+		this.load.image('header', 'assets/header.png');
+		this.load.image('cardBack', 'assets/cardBack.png');
 
 		// I got these images from:
 		// 		http://opengameart.com	
