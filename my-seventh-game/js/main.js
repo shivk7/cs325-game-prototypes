@@ -33,6 +33,8 @@ function create() {
 
         gameObject.destroy();
 
-    });}
+    });
+}
+
 function update() {
 }
