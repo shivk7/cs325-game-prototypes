@@ -25,7 +25,7 @@ function create() {
     this.add.image(500, 300, 'cat')
 
     card1 = this.add.image(400, 300, 'card1');
-    card2 = this.add.image(500, 300, 'card2');
+    card2 = this.add.image(500, 300, 'card1');
 
     this.input.once('pointerdown', function () {
 
