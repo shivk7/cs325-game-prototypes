@@ -36,5 +36,6 @@ onClicked(pointer, objectClicked);{
     objectClicked.destroy();
 }
 
+
 function update() {
 }
