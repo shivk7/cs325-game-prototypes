@@ -60,7 +60,12 @@ function create() {
     this.add.image(100, 500, '5')
     this.add.image(300, 500, '50')
     this.add.image(500, 500, '100')
+    this.add.image(700, 500, '15')
 
+    this.add.image(100, 700, '30')
+    this.add.image(300, 700, '20')
+    this.add.image(500, 700, '25')
+    this.add.image(700, 700, '10')
 
     this.card1 = this.add.image(100, 100, 'card1');
     this.card2 = this.add.image(300, 100, 'card2');
@@ -76,6 +81,11 @@ function create() {
     this.card4 = this.add.image(100, 500, 'card4');
     this.card5 = this.add.image(300, 500, 'card5');
     this.card6 = this.add.image(500, 500, 'card6');
+    this.card12 = this.add.image(700, 500, 'card12');
+
+    this.card13 = this.add.image(100, 700, 'card13');
+    this.card14 = this.add.image(300, 700, 'card14');
+    this.card15 = this.add.image(500, 700, 'card15');
 
     this.card1.setInteractive();
     this.card2.setInteractive();
@@ -88,6 +98,11 @@ function create() {
     this.card9.setInteractive();
     this.card10.setInteractive();
     this.card11.setInteractive();
+    this.card12.setInteractive();
+    this.card13.setInteractive();
+    this.card14.setInteractive();
+    this.card15.setInteractive();
+    this.card16.setInteractive();
     
 
     this.input.on('gameobjectdown', function (pointer, gameObject) {
