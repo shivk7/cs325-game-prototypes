@@ -86,6 +86,7 @@ function create() {
     this.card13 = this.add.image(100, 700, 'card13');
     this.card14 = this.add.image(300, 700, 'card14');
     this.card15 = this.add.image(500, 700, 'card15');
+    this.card16 = this.add.image(700, 700, 'card15');
 
     this.card1.setInteractive();
     this.card2.setInteractive();
