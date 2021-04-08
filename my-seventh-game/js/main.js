@@ -45,6 +45,8 @@ function preload() {
     this.load.image('ll', 'assets/leg_lifts.png');
     this.load.image('lgs', 'assets/lunges.png');
     this.load.image('mc', 'assets/mountain_climbers.png');
+    this.load.image('10', 'assets/10.png');
+    this.load.image('st', 'assets/shoulder_touches.png');
 }
 
 function create() {
@@ -56,6 +58,7 @@ function create() {
     this.add.image(100, 300, 'll')
     this.add.image(300, 300, 'lgs')
     this.add.image(500, 300, 'mc')
+    this.add.image(700, 300, 'st');
     
     this.add.image(100, 500, '5')
     this.add.image(300, 500, '50')
