@@ -46,13 +46,13 @@ function preload() {
 function create() {
     this.add.image(100, 100, 'jj')
     this.add.image(300, 100, 'PU')
-    this.add.image(600, 100, 'SQ')
-    this.add.image(900, 100, 'bps')
+    this.add.image(500, 100, 'SQ')
+    this.add.image(700, 100, 'bps')
     
 
     this.add.image(100, 500, '5')
-    this.add.image(400, 500, '50')
-    this.add.image(700, 500, '100')
+    this.add.image(300, 500, '50')
+    this.add.image(500, 500, '100')
 
 
     this.card1 = this.add.image(100, 100, 'card1');
