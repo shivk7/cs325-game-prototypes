@@ -83,6 +83,12 @@ function create() {
     this.card4.setInteractive();
     this.card5.setInteractive();
     this.card6.setInteractive();
+    this.card7.setInteractive();
+    this.card8.setInteractive();
+    this.card9.setInteractive();
+    this.card10.setInteractive();
+    this.card11.setInteractive();
+    this.card12.setInteractive();
     
 
     this.input.on('gameobjectdown', function (pointer, gameObject) {
