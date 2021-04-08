@@ -45,8 +45,9 @@ function preload() {
 
 function create() {
     this.add.image(100, 100, 'jj')
-    this.add.image(400, 100, 'PU')
-    this.add.image(700, 100, 'SQ')
+    this.add.image(300, 100, 'PU')
+    this.add.image(600, 100, 'SQ')
+    this.add.image(900, 100, 'bps')
     
 
     this.add.image(100, 500, '5')
