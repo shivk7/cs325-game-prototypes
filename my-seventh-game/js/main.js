@@ -2,8 +2,8 @@ import "./phaser.js";
 
 var config = {
     type: Phaser.AUTO,
-    width: 1200,
-    height: 900,
+    width: 1000,
+    height: 750,
     scene: {
         preload: preload,
         create: create,
