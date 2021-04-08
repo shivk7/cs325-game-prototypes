@@ -27,6 +27,10 @@ function preload() {
     this.load.image('card10', 'assets/cardBack.png');
     this.load.image('card11', 'assets/cardBack.png');
     this.load.image('card12', 'assets/cardBack.png');
+    this.load.image('card13', 'assets/cardBack.png');
+    this.load.image('card14', 'assets/cardBack.png');
+    this.load.image('card15', 'assets/cardBack.png');
+    this.load.image('card16', 'assets/cardBack.png');
     this.load.image('jj', 'assets/jumping_jacks.png');
     this.load.image('PU', 'assets/push_ups.png');
     this.load.image('SQ', 'assets/squats.png');
@@ -48,20 +52,30 @@ function create() {
     this.add.image(300, 100, 'PU')
     this.add.image(500, 100, 'SQ')
     this.add.image(700, 100, 'bps')
-    
 
+    this.add.image(100, 300, 'll')
+    this.add.image(300, 300, 'lgs')
+    this.add.image(500, 300, 'mc')
+    
     this.add.image(100, 500, '5')
     this.add.image(300, 500, '50')
     this.add.image(500, 500, '100')
 
 
     this.card1 = this.add.image(100, 100, 'card1');
-    this.card2 = this.add.image(400, 100, 'card2');
-    this.card3 = this.add.image(700, 100, 'card3');
+    this.card2 = this.add.image(300, 100, 'card2');
+    this.card3 = this.add.image(500, 100, 'card3');
+    this.card7 = this.add.image(700, 100, 'card7');
+
+    this.card8 = this.add.image(100, 300, 'card8');
+    this.card9 = this.add.image(300, 300, 'card9');
+    this.card10 = this.add.image(500, 300, 'card10');
+    this.card11 = this.add.image(700, 300, 'card11');
+
 
     this.card4 = this.add.image(100, 500, 'card4');
-    this.card5 = this.add.image(400, 500, 'card5');
-    this.card6 = this.add.image(700, 500, 'card6');
+    this.card5 = this.add.image(300, 500, 'card5');
+    this.card6 = this.add.image(500, 500, 'card6');
 
     this.card1.setInteractive();
     this.card2.setInteractive();
