@@ -2,8 +2,8 @@ import "./phaser.js";
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 900,
     scene: {
         preload: preload,
         create: create,
@@ -21,6 +21,12 @@ function preload() {
     this.load.image('card4', 'assets/cardBack.png');
     this.load.image('card5', 'assets/cardBack.png');
     this.load.image('card6', 'assets/cardBack.png');
+    this.load.image('card7', 'assets/cardBack.png');
+    this.load.image('card8', 'assets/cardBack.png');
+    this.load.image('card9', 'assets/cardBack.png');
+    this.load.image('card10', 'assets/cardBack.png');
+    this.load.image('card11', 'assets/cardBack.png');
+    this.load.image('card12', 'assets/cardBack.png');
     this.load.image('jj', 'assets/jumping_jacks.png');
     this.load.image('PU', 'assets/push_ups.png');
     this.load.image('SQ', 'assets/squats.png');
@@ -41,6 +47,7 @@ function create() {
     this.add.image(100, 100, 'jj')
     this.add.image(400, 100, 'PU')
     this.add.image(700, 100, 'SQ')
+    
 
     this.add.image(100, 500, '5')
     this.add.image(400, 500, '50')
