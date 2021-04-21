@@ -23,6 +23,7 @@ function create() {
         frames: 'dice',
         frameRate: 20,
         repeat: -1
+    };
 }
 
 function update() {
