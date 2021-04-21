@@ -44,18 +44,7 @@ function create() {
             repeat: 10,
             onRepeat: () => {
                 const frame = Phaser.Math.Between(1, 6);
-                dice1.setFrame(frame);
-            }
-        });
-    });
-
-    this.input.on('pointerdown', () => {
-        this.tweens.addCounter({
-            duration: 200,
-            repeat: 10,
-            onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
-                dice2.setFrame(frame);
+                dice12.setFrame(frame);
             }
         });
     });
@@ -92,6 +81,7 @@ function create() {
             }
         });
     });
+
 }
 
 function update() {
