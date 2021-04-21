@@ -13,19 +13,19 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 600, frameHeight: 100, endFrame: 6 });
+    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 600, frameHeight: 100 });
 }
 
 function create() {
 
-    const config1 = {
-        key: 'roll1',
-        frames: 'dice',
-        frameRate: 20,
-        repeat: -1
-    };
-
-    this.anims.create(roll1);
+    this.tweens.addCounter({
+        duration: 200,
+        repeat: 10,
+        onRepeat: () => {
+            const frame = Phaser.Math.Between(1, 6);
+            dice.setFrame(frame);
+        }
+    });
 
     this.add.sprite(200, 300, 'dice').play('roll1');
 }
