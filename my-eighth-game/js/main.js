@@ -19,7 +19,7 @@ function preload() {
 function create() {
     const dice = this.add.sprite(200, 300, 'dice')
 
-    this.input.once('pointerdown', () => {
+    this.input.on('pointerdown', () => {
         this.tweens.addCounter({
             duration: 200,
             repeat: 10,
