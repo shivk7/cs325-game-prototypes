@@ -14,18 +14,14 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('dice2', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('dice3', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('dice4', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('dice5', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-}
+
 
 function create() {
     const dice = this.add.sprite(400, 300, 'dice')
-    const dice2 = this.add.sprite(600, 300, 'dice2')
-    const dice3 = this.add.sprite(200, 300, 'dice3')
-    const dice4 = this.add.sprite(300, 600, 'dice4')
-    const dice5 = this.add.sprite(500, 600, 'dice5')
+    const dice2 = this.add.sprite(600, 300, 'dice')
+    const dice3 = this.add.sprite(200, 300, 'dice')
+    const dice4 = this.add.sprite(300, 600, 'dice')
+    const dice5 = this.add.sprite(500, 600, 'dice')
 
     this.input.on('pointerdown', () => {
         this.tweens.addCounter({
