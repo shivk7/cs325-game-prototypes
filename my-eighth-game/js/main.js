@@ -28,52 +28,11 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(0, 5);
-                dice.setFrame(frame);
-            }
-        });
-    });
-
-    this.input.on('pointerdown', () => {
-        this.tweens.addCounter({
-            duration: 200,
-            repeat: 10,
-            onRepeat: () => {
-                const frame = Phaser.Math.Between(0, 5);
-                dice2.setFrame(frame);
-            }
-        });
-    });
-
-    this.input.on('pointerdown', () => {
-        this.tweens.addCounter({
-            duration: 200,
-            repeat: 10,
-            onRepeat: () => {
-                const frame = Phaser.Math.Between(0, 5);
-                dice3.setFrame(frame);
-            }
-        });
-    });
-
-    this.input.on('pointerdown', () => {
-        this.tweens.addCounter({
-            duration: 200,
-            repeat: 10,
-            onRepeat: () => {
-                const frame = Phaser.Math.Between(0, 5);
-                dice4.setFrame(frame);
-            }
-        });
-    });
-
-    this.input.on('pointerdown', () => {
-        this.tweens.addCounter({
-            duration: 200,
-            repeat: 10,
-            onRepeat: () => {
-                const frame = Phaser.Math.Between(0, 5);
-                dice5.setFrame(frame);
+                dice1.setFrame(Phaser.Math.Between(0, 5));
+                dice2.setFrame(Phaser.Math.Between(0, 5));
+                dice3.setFrame(Phaser.Math.Between(0, 5));
+                dice4.setFrame(Phaser.Math.Between(0, 5));
+                dice5.setFrame(Phaser.Math.Between(0, 5));
             }
         });
     });
