@@ -19,13 +19,15 @@ function preload() {
 function create() {
     const dice = this.add.sprite(200, 300, 'dice')
 
-    this.tweens.addCounter({
-        duration: 200,
-        repeat: 10,
-        onRepeat: () => {
-            const frame = Phaser.Math.Between(1, 6);
-            dice.setFrame(frame);
-        }
+    this.input.once('pointerdown', () => {
+        this.tweens.addCounter({
+            duration: 200,
+            repeat: 10,
+            onRepeat: () => {
+                const frame = Phaser.Math.Between(1, 6);
+                dice.setFrame(frame);
+            }
+        });
     });
 
 }
