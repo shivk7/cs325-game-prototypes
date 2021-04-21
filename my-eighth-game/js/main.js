@@ -28,7 +28,7 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
+                const frame = Phaser.Math.Between(0, 5);
                 dice.setFrame(frame);
             }
         });
@@ -39,7 +39,7 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
+                const frame = Phaser.Math.Between(0, 5);
                 dice2.setFrame(frame);
             }
         });
@@ -50,7 +50,7 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
+                const frame = Phaser.Math.Between(0, 5);
                 dice3.setFrame(frame);
             }
         });
@@ -61,7 +61,7 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
+                const frame = Phaser.Math.Between(0, 5);
                 dice4.setFrame(frame);
             }
         });
@@ -72,7 +72,7 @@ function create() {
             duration: 200,
             repeat: 10,
             onRepeat: () => {
-                const frame = Phaser.Math.Between(1, 6);
+                const frame = Phaser.Math.Between(0, 5);
                 dice5.setFrame(frame);
             }
         });
