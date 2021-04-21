@@ -28,11 +28,11 @@ function preload() {
                 duration: 200,
                 repeat: 10,
                 onRepeat: () => {
-                    dice1.setFrame(Phaser.Math.Between(0, 5));
-                    dice2.setFrame(Phaser.Math.Between(0, 5));
-                    dice3.setFrame(Phaser.Math.Between(0, 5));
-                    dice4.setFrame(Phaser.Math.Between(0, 5));
-                    dice5.setFrame(Phaser.Math.Between(0, 5));
+                    dice1.setFrame(Phaser.Math.Between(0, 6));
+                    dice2.setFrame(Phaser.Math.Between(0, 6));
+                    dice3.setFrame(Phaser.Math.Between(0, 6));
+                    dice4.setFrame(Phaser.Math.Between(0, 6));
+                    dice5.setFrame(Phaser.Math.Between(0, 6));
                 }
             });
         });
