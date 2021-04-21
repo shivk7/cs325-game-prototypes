@@ -13,10 +13,11 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 600, frameHeight: 100 });
+    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
 }
 
 function create() {
+    this.add.sprite(200, 300, 'dice')
 
     this.tweens.addCounter({
         duration: 200,
@@ -27,7 +28,6 @@ function create() {
         }
     });
 
-    this.add.sprite(200, 300, 'dice').play('roll1');
 }
 
 function update() {
