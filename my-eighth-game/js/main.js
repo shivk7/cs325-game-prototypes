@@ -19,11 +19,15 @@ function preload() {
 function create() {
 
     const config1 = {
-        key: 'explode1',
+        key: 'roll1',
         frames: 'dice',
         frameRate: 20,
         repeat: -1
     };
+
+    this.anims.create(roll1);
+
+    this.add.sprite(200, 300, 'dice').play('roll1');
 }
 
 function update() {
