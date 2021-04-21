@@ -13,7 +13,7 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.spritesheet('dice', 'assets/dice1.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
 
 }
     function create() {
