@@ -17,7 +17,7 @@ function preload() {
 
 }
     function create() {
-        const dice = this.add.sprite(400, 300, 'dice')
+        const dice1 = this.add.sprite(400, 300, 'dice')
         const dice2 = this.add.sprite(600, 300, 'dice')
         const dice3 = this.add.sprite(200, 300, 'dice')
         const dice4 = this.add.sprite(300, 600, 'dice')
