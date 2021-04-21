@@ -13,7 +13,7 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('dice', 'assets/dice1.png', { frameWidth: 64, frameHeight: 64 });
 
 }
     function create() {
@@ -28,11 +28,11 @@ function preload() {
                 duration: 200,
                 repeat: 10,
                 onRepeat: () => {
-                    dice1.setFrame(Phaser.Math.Between(0, 6));
-                    dice2.setFrame(Phaser.Math.Between(0, 6));
-                    dice3.setFrame(Phaser.Math.Between(0, 6));
-                    dice4.setFrame(Phaser.Math.Between(0, 6));
-                    dice5.setFrame(Phaser.Math.Between(0, 6));
+                    dice1.setFrame(Phaser.Math.Between(0, 5));
+                    dice2.setFrame(Phaser.Math.Between(0, 5));
+                    dice3.setFrame(Phaser.Math.Between(0, 5));
+                    dice4.setFrame(Phaser.Math.Between(0, 5));
+                    dice5.setFrame(Phaser.Math.Between(0, 5));
                 }
             });
         });
