@@ -26,7 +26,7 @@ function preload() {
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
                 duration: 200,
-                repeat: 20,
+                repeat: 10,
                 onRepeat: () => {
                     dice1.setFrame(Phaser.Math.Between(0, 5));
                     dice2.setFrame(Phaser.Math.Between(0, 5));
