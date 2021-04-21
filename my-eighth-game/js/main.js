@@ -17,7 +17,7 @@ function preload() {
 }
 
 function create() {
-    this.add.sprite(200, 300, 'dice')
+    const dice = this.add.sprite(200, 300, 'dice')
 
     this.tweens.addCounter({
         duration: 200,
