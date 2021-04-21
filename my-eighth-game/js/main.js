@@ -44,7 +44,7 @@ function create() {
             repeat: 10,
             onRepeat: () => {
                 const frame = Phaser.Math.Between(1, 6);
-                dice12.setFrame(frame);
+                dice2.setFrame(frame);
             }
         });
     });
