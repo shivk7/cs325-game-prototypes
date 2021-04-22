@@ -36,9 +36,9 @@ function preload() {
                     dice3.setFrame(Phaser.Math.Between(0, 5));
                     dice4.setFrame(Phaser.Math.Between(0, 5));
                     dice5.setFrame(Phaser.Math.Between(0, 5));
-                    math1.setFrame(Phaser.Math.Between(0, 4));
-                    math2.setFrame(Phaser.Math.Between(0, 4));
-                    math3.setFrame(Phaser.Math.Between(0, 4));
+                    math1.setFrame(Phaser.Math.Between(0, 1));
+                    math2.setFrame(Phaser.Math.Between(0, 1));
+                    math3.setFrame(Phaser.Math.Between(0, 1));
                 }
             });
         });
