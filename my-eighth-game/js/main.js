@@ -21,8 +21,10 @@ function preload() {
         const dice1 = this.add.sprite(400, 300, 'dice')
         const dice2 = this.add.sprite(600, 300, 'dice')
 
-        this.add.sprite(500, 500, 'answer')
+        const answerButton = this.add.sprite(500, 500, 'answer')
+        answerButton.setInteractive();
 
+        answerButton.on('pointerdown', () => { /* do things here */ });
         const math1 = this.add.sprite(500, 300, 'math')
         
 
@@ -43,6 +45,7 @@ function preload() {
             });
         });
 
+        
     }
 
     function update() {
