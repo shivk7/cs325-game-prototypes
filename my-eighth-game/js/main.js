@@ -26,6 +26,10 @@ function preload() {
         const math2 = this.add.sprite(300, 300, 'math')
         const math3 = this.add.sprite(400, 600, 'math')
 
+        const value1 = Number(dice1.frame.name + 1);
+        const value2 = Number(dice2.frame.name + 1);
+        const result = value1 - value2;
+
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
                 duration: 200,
