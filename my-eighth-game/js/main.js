@@ -14,7 +14,7 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('math', 'assets/math.png', { frameWidth: 64, frameHeight: 55 });
+    this.load.spritesheet('math', 'assets/math.png', { frameWidth: 60, frameHeight: 55 });
 }
     function create() {
         const dice1 = this.add.sprite(400, 300, 'dice')
