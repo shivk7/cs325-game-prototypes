@@ -15,16 +15,15 @@ var game = new Phaser.Game(config);
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('math', 'assets/math.png', { frameWidth: 60, frameHeight: 55 });
+
 }
     function create() {
         const dice1 = this.add.sprite(400, 300, 'dice')
         const dice2 = this.add.sprite(600, 300, 'dice')
 
+        const math1 = this.add.sprite(500, 300, 'math')
         
 
-        const value1 = Number(dice1.frame.name + 1);
-        const value2 = Number(dice2.frame.name + 1);
-        const result = value1 - value2;
 
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
