@@ -42,11 +42,11 @@ function preload() {
 
         const map = this.make.tilemap({ key: 'map' });
 
+        const tileset5 = map.addTilesetImage('grass', 'ggrass');
         const tileset = map.addTilesetImage('light-brown-color-solid-background-1920x1080', 'lightBrown');
         const tileset2 = map.addTilesetImage('ladder', 'ladders');
         const tileset3 = map.addTilesetImage('snake', 'snakes');
         const tileset4 = map.addTilesetImage('dark brown', 'darkBrown');
-        const tileset5 = map.addTilesetImage('grass', 'ggrass');
 
         const grasslayer = map.createStaticLayer('grassLayer', tileset5, 0, 0);
         const lightbrown = map.createStaticLayer('lightbrownLayer', tileset, 0, 0);
