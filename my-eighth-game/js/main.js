@@ -19,6 +19,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 let player;
+var cursors;
 
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
@@ -78,6 +79,7 @@ function preload() {
 
         player = this.physics.add.sprite(400, 350, 'dude');
         this.physics.add.collider(player, grasslayer);
+        cursors = this.input.keyboard.createCursorKeys();
     }
 
 function update() {
