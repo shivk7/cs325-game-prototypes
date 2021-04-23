@@ -181,6 +181,8 @@ function update() {
     }
 
     //player 2
+    player1.body.setVelocity(0);
+
     if (keys.A.isDown) {
         player2.setVelocityX(-260);
     } else if (keys.D.isDown) {
@@ -193,4 +195,4 @@ function update() {
         player2.setVelocityY(260);
     }
 
-    }
+    }a
