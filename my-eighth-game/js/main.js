@@ -34,12 +34,10 @@ function preload() {
         const tileset3 = map.addTilesetImage('snake', 'snakes');
         const tileset4 = map.addTilesetImage('dark brown', 'darkBrown');
 
-        const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
-        const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
         const lightbrown = map.createStaticLayer('lightbrownLayer', tileset, 0, 0);
         const darkbrown = map.createStaticLayer('darkbrownLayer', tileset4, 0, 0);
-
-  
+        const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
+        const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
