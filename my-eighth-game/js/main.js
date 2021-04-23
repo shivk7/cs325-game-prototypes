@@ -22,10 +22,10 @@ function preload() {
     this.load.image('snakes', 'assets/snake-graphics.png')
 }
     function create() {
-        const dice1 = this.add.sprite(400, 300, 'dice')
-        const dice2 = this.add.sprite(600, 300, 'dice')
+        const dice1 = this.add.sprite(600, 100, 'dice')
+        const dice2 = this.add.sprite(800, 1000, 'dice')
 
-        const math1 = this.add.sprite(500, 300, 'math')
+        const math1 = this.add.sprite(700, 1000, 'math')
 
         const map = this.make.tilemap({ key: 'map' });
 
