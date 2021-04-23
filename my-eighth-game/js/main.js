@@ -25,6 +25,10 @@ function preload() {
         const dice1 = this.add.sprite(600, 100, 'dice')
         const dice2 = this.add.sprite(800, 1000, 'dice')
 
+        const value1 = Number(dice1.frame.name + 1);
+        const value2 = Number(dice2.frame.name + 1);
+        const result = value1 - value 2;
+
         const math1 = this.add.sprite(700, 1000, 'math')
 
         const map = this.make.tilemap({ key: 'map' });
