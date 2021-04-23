@@ -12,6 +12,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('math', 'assets/math.png', { frameWidth: 60, frameHeight: 55 });
@@ -47,9 +48,6 @@ function preload() {
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
-
-
-
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
                 duration: 200,
@@ -61,10 +59,8 @@ function preload() {
                 }
             });
         });
-        
 
     }
 
-function update() {
-   
+    function update() {
     }
