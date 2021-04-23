@@ -30,12 +30,16 @@ function preload() {
         const map = this.make.tilemap({ key: 'map' });
 
         const tileset = map.addTilesetImage('light-brown-color-solid-background-1920x1080', 'lightBrown');
-        const tileset = map.addTilesetImage('ladder', 'ladders');
-        const tileset = map.addTilesetImage('snake', 'snakes');
-        const tileset = map.addTilesetImage('dark brown', 'darkBrown');
+        const tileset2 = map.addTilesetImage('ladder', 'ladders');
+        const tileset3 = map.addTilesetImage('snake', 'snakes');
+        const tileset4 = map.addTilesetImage('dark brown', 'darkBrown');
 
-        const board = map.createStaticLayer("board", tileset, 0, 0);
-        const ladder = map.createStaticLayer("ladder", tileset, 0, 0);
+        const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
+        const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
+        const lightbrown = map.createStaticLayer('lightbrownLayer', tileset, 0, 0);
+        const darkbrown = map.createStaticLayer('darkbrownLayer', tileset4, 0, 0);
+
+  
 
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
