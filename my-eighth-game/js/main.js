@@ -60,6 +60,7 @@ function create() {
     const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
     grasslayer.setCollisionByProperty({ collides: true });
+    lightbrown.setCollisionByProperty({ collides: true });
 
 
 
