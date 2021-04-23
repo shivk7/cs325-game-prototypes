@@ -121,27 +121,27 @@ function preload() {
             repeat: -1
         });
         this.anims.create({
-            key: 'turn',
+            key: 'a',
             frames: [{ key: 'dude2', frame: 4 }],
             frameRate: 20
         });
 
         this.anims.create({
-            key: 'right',
+            key: 'd',
             frames: this.anims.generateFrameNumbers('dude2', { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
-            key: 'up',
+            key: 'w',
             frames: this.anims.generateFrameNumbers('dude2', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
-            key: 'down',
+            key: 's',
             frames: this.anims.generateFrameNumbers('dude2', { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
@@ -181,18 +181,23 @@ function update() {
     }
 
     //player 2
-    player1.body.setVelocity(0);
+    player2.body.setVelocity(0);
 
     if (keys.A.isDown) {
         player2.setVelocityX(-260);
+        player2.anims.play('a', true)
     } else if (keys.D.isDown) {
         player2.setVelocityX(260);
+        player2.anims.play('d', true);
     }
 
     if (keys.W.isDown) {
         player2.setVelocityY(-260);
+        player2.anims.play('w', true);
     } else if (keys.S.isDown) {
         player2.setVelocityY(260);
+        player2.anims.play('s', true);
+
     }
 
     }a
