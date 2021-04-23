@@ -54,6 +54,9 @@ function preload() {
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
+        grasslayer.setCollisionByProperty({ collides: true });
+
+
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
                 duration: 200,
