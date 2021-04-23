@@ -192,7 +192,7 @@ function update() {
 
     else if (keys.W.isDown) {
         player2.setVelocityY(-260);
-        player.anims.play('down', true);
+        player2.anims.play('down', true);
     }
     else if (keys.D.isDown) {
         player2.setVelocityY(260);
