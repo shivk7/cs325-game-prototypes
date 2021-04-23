@@ -77,7 +77,7 @@ function preload() {
             });
         });
 
-        player = this.physics.add.sprite(400, 350, 'dude');
+        player = this.physics.add.sprite(100, 1000, 'dude');
 
         this.anims.create({
             key: 'turn',
