@@ -197,7 +197,10 @@ function update() {
     } else if (keys.S.isDown) {
         player2.setVelocityY(260);
         player2.anims.play('s', true);
-
+    }
+    else {
+        player2.setVelocityX(0);
+        player2.anims.play('turn1');
     }
 
 }
