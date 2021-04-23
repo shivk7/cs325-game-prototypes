@@ -22,7 +22,7 @@ function preload() {
     this.load.image('snakes', 'assets/snake-graphics.png')
 }
     function create() {
-        const dice1 = this.add.sprite(600, 100, 'dice')
+        const dice1 = this.add.sprite(600, 1000, 'dice')
         const dice2 = this.add.sprite(800, 1000, 'dice')
 
         const value1 = Number(dice1.frame.name + 1);
