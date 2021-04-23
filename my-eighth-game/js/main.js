@@ -1,7 +1,7 @@
 import "./phaser.js";
 var config = {
     type: Phaser.AUTO,
-    width: 1024,
+    width: 1050,
     height: 1200,
     backgroundColor: '#4488aa',
     scene: {
