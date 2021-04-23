@@ -3,12 +3,6 @@ var config = {
     type: Phaser.AUTO,
     width: 1024,
     height: 1200,
-    physics: {
-        default: "arcade",
-        arcade: {
-            gravity: { y: 0 } 
-        }
-    },
     backgroundColor: '#FFFFFF',
     scene: {
         preload: preload,
