@@ -77,7 +77,7 @@ function preload() {
             });
         });
 
-        player = this.physics.add.sprite(50, 940, 'dude');
+        player = this.physics.add.sprite(50, 930, 'dude');
 
         player.setCollideWorldBounds(true);
 
