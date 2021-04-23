@@ -121,7 +121,7 @@ function create() {
         repeat: -1
     });
     this.anims.create({
-        key: 'turn',
+        key: 'turn1',
         frames: [{ key: 'dude2', frame: 4 }],
         frameRate: 20
     });
@@ -191,13 +191,15 @@ function update() {
         player2.anims.play('d', true);
     }
 
-    if (keys.W.isDown) {
+    else if (keys.W.isDown) {
         player2.setVelocityY(-260);
         player2.anims.play('w', true);
     } else if (keys.S.isDown) {
         player2.setVelocityY(260);
         player2.anims.play('s', true);
-
     }
-
+    else {
+        player2.body.setVelocity(0);
+        player2.anims.play('turn1')
+    }
 }
