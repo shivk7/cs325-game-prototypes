@@ -48,9 +48,9 @@ function preload() {
         const tileset4 = map.addTilesetImage('dark brown', 'darkBrown');
         const tileset5 = map.addTilesetImage('grass', 'ggrass');
 
+        const grasslayer = map.createStaticLayer('grassLayer', tileset5, 0, 0);
         const lightbrown = map.createStaticLayer('lightbrownLayer', tileset, 0, 0);
         const darkbrown = map.createStaticLayer('darkbrownLayer', tileset4, 0, 0);
-        const grasslayer = map.createStaticLayer('grassLayer', tileset5, 0, 0);
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
