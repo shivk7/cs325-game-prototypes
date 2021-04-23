@@ -3,6 +3,12 @@ var config = {
     type: Phaser.AUTO,
     width: 1024,
     height: 1200,
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0 }
+        }
+    },
     backgroundColor: '#FFFFFF',
     scene: {
         preload: preload,
@@ -12,6 +18,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+var player;
 
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
