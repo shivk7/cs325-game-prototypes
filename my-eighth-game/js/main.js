@@ -18,7 +18,6 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-let player;
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('math', 'assets/math.png', { frameWidth: 60, frameHeight: 55 });
@@ -68,26 +67,10 @@ function preload() {
                 }
             });
         });
-        player = this.physics.add.sprite(100, 1000, 'dude')
-        this.physics.add.collider(player, grasslayer);
+        
 
     }
 
 function update() {
-    player.body.setVelocity(0);
-
-    if (cursors.left.isDown) {
-        player.body.setVelocityX(-100);
-    } else if (cursors.right.isDown) {
-        player.body.setVelocityX(100);
-    }
-
-    if (cursors.up.isDown) {
-        player.body.setVelocityY(-100);
-    } else if (cursors.down.isDown) {
-        player.body.setVelocityY(100);
-    }
-
-    player.body.velocity.normalize().scale(speed);
-
+   
     }
