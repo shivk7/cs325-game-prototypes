@@ -12,7 +12,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-let player;
+var player;
 
 
 function preload() {
@@ -62,26 +62,48 @@ function preload() {
             });
         });
 
-        player = this.physics.add.sprite(100, 1000, 'dude')
+        player = this.physics.add.sprite(100, 1000, 'dude');
 
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+
+        });
+
+        this.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 4 }],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        cursors = this.input.keyboard.createCursorKeys();
+
+        this.physics.add.collider(player, worldLayer);
+       
     }
 
-function update() {
-    player.body.setVelocity(0);
-
-    if (cursors.left.isDown) {
-        player.body.setVelocityX(-100);
-    } else if (cursors.right.isDown) {
-        player.body.setVelocityX(100);
-    }
-
- 
-    if (cursors.up.isDown) {
-        player.body.setVelocityY(-100);
-    } else if (cursors.down.isDown) {
-        player.body.setVelocityY(100);
-    }
-
-   
-    player.body.velocity.normalize().scale(speed);
+    function update() {
     }
