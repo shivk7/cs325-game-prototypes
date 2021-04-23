@@ -183,23 +183,14 @@ function update() {
     //player 2
     if (keys.A.isDown) {
         player2.setVelocityX(-260);
-        player2.anims.play('left', true);
-    }
-    else if (keys.D.isDown) {
+    } else if (keys.D.isDown) {
         player2.setVelocityX(260);
-        player2.anims.play('right', true);
     }
 
-    else if (keys.W.isDown) {
+    if (keys.W.isDown) {
         player2.setVelocityY(-260);
-        player2.anims.play('down', true);
-    }
-    else if (keys.D.isDown) {
+    } else if (keys.S.isDown) {
         player2.setVelocityY(260);
-        player2.anims.play('up', true);
     }
-    else {
-        player2.setVelocityX(0);
-        player2.anims.play('turn');
+
     }
-}
