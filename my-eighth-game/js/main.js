@@ -115,16 +115,24 @@ function update() {
     player.body.setVelocity(0);
 
     if (cursors.left.isDown) {
-        player.body.setVelocityX(-100);
-    } else if (cursors.right.isDown) {
-        player.body.setVelocityX(100);
+        player.setVelocityX(-260);
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown) {
+        player.setVelocityX(260);
+        player.anims.play('right', true);
     }
 
-    if (cursors.up.isDown) {
-        player.body.setVelocityY(-100);
-    } else if (cursors.down.isDown) {
-        player.body.setVelocityY(100);
+    else if (cursors.up.isDown) {
+        player.setVelocityY(-260);
+        player.anims.play('down', true);
     }
-
-    player.body.velocity.normalize().scale(speed);
+    else if (cursors.down.isDown) {
+        player.setVelocityY(260);
+        player.anims.play('up', true);
+    }
+    else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
 }
