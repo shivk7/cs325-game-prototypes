@@ -1,9 +1,9 @@
 import "./phaser.js";
 var config = {
     type: Phaser.AUTO,
-    width: 1024,
+    width: 1030,
     height: 1200,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#4488aa',
     scene: {
         preload: preload,
         create: create,
