@@ -1,4 +1,4 @@
-
+import "./phaser.js";
 var config = {
     type: Phaser.AUTO,
     width: 1024,
@@ -53,7 +53,7 @@ function preload() {
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
-        
+
 
 
         this.input.on('pointerdown', () => {
