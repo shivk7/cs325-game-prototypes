@@ -28,8 +28,8 @@ function preload() {
     this.load.image('ladders', 'assets/ladder.png')
     this.load.image('darkBrown', 'assets/download.png')
     this.load.image('snakes', 'assets/snake-graphics.png')
-    this.load.image('ggrass', 'assets/grass.png')
-    this.load.spritesheet('dude', 'assets/dude.png')
+    this.load.image('ggrass', 'assets/grass.png');
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
     function create() {
         const dice1 = this.add.sprite(400, 1100, 'dice')
