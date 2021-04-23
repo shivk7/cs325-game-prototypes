@@ -12,6 +12,8 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+let player;
+
 
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
@@ -22,6 +24,7 @@ function preload() {
     this.load.image('darkBrown', 'assets/download.png')
     this.load.image('snakes', 'assets/snake-graphics.png')
     this.load.image('ggrass', 'assets/grass.png')
+    this.load.spritesheet('dude', 'assets/dude.png')
 }
     function create() {
         const dice1 = this.add.sprite(400, 1100, 'dice')
@@ -59,7 +62,26 @@ function preload() {
             });
         });
 
+        player = this.physics.add.sprite(100, 1000, 'dude')
+
     }
 
-    function update() {
+function update() {
+    player.body.setVelocity(0);
+
+    if (cursors.left.isDown) {
+        player.body.setVelocityX(-100);
+    } else if (cursors.right.isDown) {
+        player.body.setVelocityX(100);
+    }
+
+ 
+    if (cursors.up.isDown) {
+        player.body.setVelocityY(-100);
+    } else if (cursors.down.isDown) {
+        player.body.setVelocityY(100);
+    }
+
+   
+    player.body.velocity.normalize().scale(speed);
     }

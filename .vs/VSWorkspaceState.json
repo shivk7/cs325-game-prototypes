@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\my-eighth-game",
+    "\\my-eighth-game\\js",
+    "\\my-ftfth-game",
+    "\\my-ftfth-game\\js"
   ],
-  "SelectedNode": "\\index.html",
+  "SelectedNode": "\\my-eighth-game\\js\\main.js",
   "PreviewInSolutionExplorer": false
 }
