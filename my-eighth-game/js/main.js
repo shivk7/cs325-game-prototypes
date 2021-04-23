@@ -18,7 +18,9 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-let player;
+var player1;
+var keys;
+var player2
 var cursors;
 
 function preload() {
@@ -31,6 +33,7 @@ function preload() {
     this.load.image('snakes', 'assets/snake-graphics.png')
     this.load.image('ggrass', 'assets/grass.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude2', 'assets/alien.png', { frameWidth: 31.5, frameHeight: 48 });
 }
     function create() {
         const dice1 = this.add.sprite(400, 1100, 'dice')
@@ -72,9 +75,11 @@ function preload() {
             });
         });
 
-        player = this.physics.add.sprite(50, 930, 'dude');
+        player1 = this.physics.add.sprite(50, 930, 'dude');
+        player2 = this.physics.add.sprite(40, 930, 'dude2');
 
-        player.setCollideWorldBounds(true);
+        player1.setCollideWorldBounds(true);
+        player2.setCollideWorldBounds(true);
 
         this.anims.create({
             key: 'left',
@@ -108,34 +113,93 @@ function preload() {
             frameRate: 10,
             repeat: -1
         });
+        //player 2
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('dude2', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude2', frame: 4 }],
+            frameRate: 20
+        });
 
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('dude2', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
-        this.physics.add.collider(player, grasslayer);
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('dude2', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('dude2', { start: 5, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.physics.add.collider(player1, grasslayer);
+        this.physics.add.collider(player2, grasslayer);
+
         cursors = this.input.keyboard.createCursorKeys();
+        keys = this.input.keyboard.addKeys("W,A,S,D");
     }
 
 function update() {
-    player.body.setVelocity(0);
+    //player 1
+    player1.body.setVelocity(0);
 
     if (cursors.left.isDown) {
-        player.setVelocityX(-260);
-        player.anims.play('left', true);
+        player1.setVelocityX(-260);
+        player1.anims.play('left', true);
     }
     else if (cursors.right.isDown) {
-        player.setVelocityX(260);
-        player.anims.play('right', true);
+        player1.setVelocityX(260);
+        player1.anims.play('right', true);
     }
 
     else if (cursors.up.isDown) {
-        player.setVelocityY(-260);
-        player.anims.play('down', true);
+        player1.setVelocityY(-260);
+        player1.anims.play('down', true);
     }
     else if (cursors.down.isDown) {
-        player.setVelocityY(260);
-        player.anims.play('up', true);
+        player1.setVelocityY(260);
+        player1.anims.play('up', true);
     }
     else {
-        player.setVelocityX(0);
-        player.anims.play('turn');
+        player1.setVelocityX(0);
+        player1.anims.play('turn');
+    }
+
+    //player 2
+    if (keys.A.isDown) {
+        player2.setVelocityX(-260);
+        player2.anims.play('left', true);
+    }
+    else if (keys.D.isDown) {
+        player2.setVelocityX(260);
+        player2.anims.play('right', true);
+    }
+
+    else if (keys.W.isDown) {
+        player2.setVelocityY(-260);
+        player.anims.play('down', true);
+    }
+    else if (keys.D.isDown) {
+        player2.setVelocityY(260);
+        player2.anims.play('up', true);
+    }
+    else {
+        player2.setVelocityX(0);
+        player2.anims.play('turn');
     }
 }
