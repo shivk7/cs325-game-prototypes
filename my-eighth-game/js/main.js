@@ -78,4 +78,4 @@ function preload() {
     }
 
     function update() {
-    }
+}
