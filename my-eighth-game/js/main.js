@@ -27,7 +27,7 @@ function preload() {
 
         const value1 = Number(dice1.frame.name + 1);
         const value2 = Number(dice2.frame.name + 1);
-        const result = value1 - value 2;
+        const result = value1 - value2;
 
         const math1 = this.add.sprite(700, 1000, 'math')
 
