@@ -56,6 +56,12 @@ function preload() {
 
         grasslayer.setCollisionByProperty({ collides: true });
 
+        const debugGraphics = this.add.graphics().setAlpha(0.75);
+        grasslayer.renderDebug(debugGraphics, {
+            tileColor: null, 
+            collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), 
+            faceColor: new Phaser.Display.Color(40, 39, 37, 255) 
+        });
 
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
