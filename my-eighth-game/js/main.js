@@ -20,7 +20,7 @@ function preload() {
     this.load.image('ladders', 'assets/ladder.png')
     this.load.image('darkBrown', 'assets/download.png')
     this.load.image('snakes', 'assets/snake-graphics.png')
-    this.load.image('grass', 'assets/grass.png')
+    this.load.image('ggrass', 'assets/grass.png')
 }
     function create() {
         const dice1 = this.add.sprite(400, 1100, 'dice')
@@ -38,10 +38,11 @@ function preload() {
         const tileset2 = map.addTilesetImage('ladder', 'ladders');
         const tileset3 = map.addTilesetImage('snake', 'snakes');
         const tileset4 = map.addTilesetImage('dark brown', 'darkBrown');
-        const tileset5 = map.addTilesetImage('dark brown', 'darkBrown');
+        const tileset5 = map.addTilesetImage('grass', 'ggrass');
 
         const lightbrown = map.createStaticLayer('lightbrownLayer', tileset, 0, 0);
         const darkbrown = map.createStaticLayer('darkbrownLayer', tileset4, 0, 0);
+        const grasslayer = map.createStaticLayer('grassLayer', tileset5, 0, 0);
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
