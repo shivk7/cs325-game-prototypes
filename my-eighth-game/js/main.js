@@ -3,6 +3,12 @@ var config = {
     type: Phaser.AUTO,
     width: 1024,
     height: 1200,
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0 } 
+        }
+    },
     backgroundColor: '#FFFFFF',
     scene: {
         preload: preload,
@@ -12,7 +18,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-
+let player;
 function preload() {
     this.load.spritesheet('dice', 'assets/dice.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('math', 'assets/math.png', { frameWidth: 60, frameHeight: 55 });
@@ -22,6 +28,7 @@ function preload() {
     this.load.image('darkBrown', 'assets/download.png')
     this.load.image('snakes', 'assets/snake-graphics.png')
     this.load.image('ggrass', 'assets/grass.png')
+    this.load.spritesheet('dude', 'assets/dude.png')
 }
     function create() {
         const dice1 = this.add.sprite(400, 1100, 'dice')
@@ -47,6 +54,9 @@ function preload() {
         const snakelayer = map.createStaticLayer('snakeLayer', tileset3, 0, 0);
         const ladderlayer = map.createStaticLayer('ladderLayer', tileset2, 0, 0);
 
+        grasslayer.setCollisionByProperty({ collides: true });
+
+
         this.input.on('pointerdown', () => {
             this.tweens.addCounter({
                 duration: 200,
@@ -58,8 +68,26 @@ function preload() {
                 }
             });
         });
+        player = this.physics.add.sprite(100, 1000, 'dude')
+        this.physics.add.collider(player, grasslayer);
 
     }
 
-    function update() {
+function update() {
+    player.body.setVelocity(0);
+
+    if (cursors.left.isDown) {
+        player.body.setVelocityX(-100);
+    } else if (cursors.right.isDown) {
+        player.body.setVelocityX(100);
+    }
+
+    if (cursors.up.isDown) {
+        player.body.setVelocityY(-100);
+    } else if (cursors.down.isDown) {
+        player.body.setVelocityY(100);
+    }
+
+    player.body.velocity.normalize().scale(speed);
+
     }
